@@ -7543,13 +7543,13 @@ const DB = {
 
   // ── 雲端備份與即時股價設定 ──
   get gasUrl() {
-    return localStorage.getItem('tl_gas_url') || '';
+    return localStorage.getItem('tl_gas_url') || 'https://script.google.com/macros/s/AKfycbyqrFdcMSUXmnADR4QFk3cYItHuHMRav0jaXd1cf59y8TI0lhovdVroqLhJnFwSaud6yw/exec';
   },
   set gasUrl(v) {
     localStorage.setItem('tl_gas_url', (v || '').trim());
   },
   get sheetUrl() {
-    return localStorage.getItem('tl_sheet_url') || '';
+    return localStorage.getItem('tl_sheet_url') || 'https://docs.google.com/spreadsheets/d/13XYZGJegldlPg8aay3acuEx2hucx5Ty0DND38H1DgCI/edit';
   },
   set sheetUrl(v) {
     localStorage.setItem('tl_sheet_url', (v || '').trim());
