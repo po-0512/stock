@@ -14,32 +14,12 @@
 - **投資績效計算**：支援年化報酬率與投資周轉率試算。
 - **持股佔比圖表**：莫蘭迪配色甜甜圈圖與歷史交易流水帳。
 - **交易日曆**：以月曆形式檢視每日交易損益與明細。
-- **純前端 + Serverless 設計**：本地以 LocalStorage 運作，雲端可無痛串接免費的 Google Apps Script (GAS) Web App，隱私安全無負擔。
+- **純前端 + Serverless 設計**：本地以 LocalStorage 運作，雲端透過 Google Apps Script (GAS) Web App 串接，隱私安全無負擔。
 
 ---
 
-## 🌐 線上體驗
+## 🌐 相關連結
 
-可透過 GitHub Pages 直接在瀏覽器使用：
-👉 **https://po-0512.github.io/stock/**
-
----
-
-## 📖 Google 試算表與即時股價 3 分鐘設定步驟
-
-1. **建立 Google 試算表**：
-   - 前往 [Google 雲端硬碟](https://drive.google.com/) 建立一份新的 Google 試算表（可命名為 `TradeLog 投資帳本`）。
-2. **開啟 Apps Script 編輯器**：
-   - 在試算表上方選單點選 **擴充功能 (Extensions)** ➔ **Apps Script**。
-3. **貼入後端程式碼**：
-   - 將編輯器內原本的內容清空，貼入專案內的 [`google_apps_script.js`](./google_apps_script.js) 全部代碼。
-4. **部署為網頁應用程式 (Web App)**：
-   - 點擊右上角 **部署 (Deploy)** ➔ **新增部署作業 (New deployment)**。
-   - 點選左側齒輪 ➔ 選擇 **網頁應用程式 (Web app)**。
-   - 說明填寫：`TradeLog Backend`。
-   - 執行身分：**我 (Me)**。
-   - 誰可以存取：**所有人 (Anyone)**（確保前端網頁可呼叫 API）。
-   - 點擊 **部署**，完成 Google 帳號授權。
-5. **貼回 TradeLog 啟用**：
-   - 複製產生的 **網頁應用程式網址 (Web app URL)**（格式為 `https://script.google.com/macros/s/.../exec`）。
-   - 開啟 TradeLog 網頁，點選右上角 **☁️ 圖示** 或持股頁面上的 **「備份至 Google 表格」**，貼入網址並點擊 **儲存**，即可立即享有**一鍵備份**、**資料還原**與**台股即時股價自動更新**功能！
+* **線上體驗（GitHub Pages）**：👉 **[https://po-0512.github.io/stock/](https://po-0512.github.io/stock/)**
+* **Google 試算表雲端資料庫**：👉 **[TradeLog 投資帳本](https://docs.google.com/spreadsheets/d/13XYZGJegldlPg8aay3acuEx2hucx5Ty0DND38H1DgCI/edit)**
+* **Google Apps Script 後端 API**：`https://script.google.com/macros/s/AKfycbyqrFdcMSUXmnADR4QFk3cYItHuHMRav0jaXd1cf59y8TI0lhovdVroqLhJnFwSaud6yw/exec`
