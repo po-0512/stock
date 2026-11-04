@@ -12306,7 +12306,437 @@ function selectPickerMonth(month) {
 ============================================================ */
 
 // 內建完整 Google Apps Script 原始碼
-const GAS_SOURCE_CODE = "/**\n * ==============================================================================\n * TradeLog Google Apps Script (GAS) 雲端後端與即時股價 API\n * ==============================================================================\n * \n * 功能：\n * 1. 交易紀錄備份（自動存入 Google 表格「交易紀錄」）\n * 2. 交易紀錄還原（從 Google 表格拉取所有紀錄還原至前端 LocalStorage）\n * 3. 台灣股市即時 / 最新盤中股價查詢（支援上市 .TW 與上櫃 .TWO，自動判定）\n * 4. 試算表自動建立美化欄位與公式\n */\n\n// 試算表工作表名稱定義\nconst SHEET_TX = \"交易紀錄\";\nconst SHEET_HOLDINGS = \"持股現價\";\nconst SHEET_LOGS = \"備份日誌\";\n\n/**\n * 處理 GET 請求\n * 支援:\n * ?action=restore (還原交易與現價)\n * ?action=fetch_prices&symbols=2330,2449,6274 (查詢即時股價)\n * ?action=ping (測試連線)\n */\nfunction doGet(e) {\n  return handleRequest(e, \"GET\");\n}\n\n/**\n * 處理 POST 請求\n * 支援:\n * action=\"backup\" (備份資料至表格)\n * action=\"fetch_prices\" (查詢即時股價)\n * action=\"restore\" (還原資料)\n */\nfunction doPost(e) {\n  return handleRequest(e, \"POST\");\n}\n\nfunction handleRequest(e, method) {\n  try {\n    let params = {};\n    if (e && e.parameter) {\n      params = e.parameter;\n    }\n    \n    // 解析 POST 內容 (支援 text/plain 與 application/json)\n    let postData = null;\n    if (e && e.postData && e.postData.contents) {\n      try {\n        postData = JSON.parse(e.postData.contents);\n      } catch (err) {\n        // 若不是純 JSON 則忽略\n      }\n    }\n\n    const action = (postData && postData.action) || params.action || \"ping\";\n\n    let responseData = {};\n\n    switch (action) {\n      case \"ping\":\n        responseData = {\n          status: \"success\",\n          message: \"TradeLog Google Apps Script API 運作正常！\",\n          timestamp: new Date().toISOString()\n        };\n        break;\n\n      case \"backup\":\n        responseData = handleBackup(postData || params);\n        break;\n\n      case \"restore\":\n        responseData = handleRestore();\n        break;\n\n      case \"fetch_prices\":\n        const symbols = (postData && postData.symbols) || (params.symbols ? params.symbols.split(\",\") : []);\n        responseData = handleFetchPrices(symbols);\n        break;\n\n      default:\n        responseData = { status: \"error\", message: \"未知的 action: \" + action };\n    }\n\n    return createJsonResponse(responseData);\n  } catch (error) {\n    return createJsonResponse({\n      status: \"error\",\n      message: error.toString(),\n      stack: error.stack\n    });\n  }\n}\n\nfunction createJsonResponse(data) {\n  const output = ContentService.createTextOutput(JSON.stringify(data));\n  output.setMimeType(ContentService.MimeType.JSON);\n  return output;\n}\n\n/**\n * 取得或自動建立指定的工作表\n */\nfunction getOrCreateSheet(sheetName) {\n  const ss = SpreadsheetApp.getActiveSpreadsheet();\n  let sheet = ss.getSheetByName(sheetName);\n  if (!sheet) {\n    sheet = ss.insertSheet(sheetName);\n  }\n  return sheet;\n}\n\n/**\n * 備份所有交易資料與現價至 Google 表格\n */\nfunction handleBackup(payload) {\n  const transactions = payload.transactions || [];\n  const priceOverrides = payload.priceOverrides || {};\n\n  const ss = SpreadsheetApp.getActiveSpreadsheet();\n  const txSheet = getOrCreateSheet(SHEET_TX);\n\n  // 初始化 / 清理並重寫標題列\n  txSheet.clear();\n  const headers = [\n    \"交易ID\", \"交易日期\", \"股票代號\", \"股票名稱\", \"類型\", \n    \"交易方式\", \"成交價格\", \"成交股數\", \"手續費\", \"總金額\", \n    \"買賣理由\", \"AI行為標籤\", \"進出場時機\", \"AI短評\", \"備份更新時間\"\n  ];\n\n  txSheet.appendRow(headers);\n  \n  // 美化標題列\n  const headerRange = txSheet.getRange(1, 1, 1, headers.length);\n  headerRange.setBackground(\"#131922\")\n             .setFontColor(\"#d4a843\")\n             .setFontWeight(\"bold\")\n             .setHorizontalAlignment(\"center\");\n  txSheet.setFrozenRows(1);\n\n  const nowStr = Utilities.formatDate(new Date(), \"Asia/Taipei\", \"yyyy-MM-dd HH:mm:ss\");\n\n  // 寫入交易列\n  if (transactions.length > 0) {\n    const rows = transactions.map(t => [\n      t.id || \"\",\n      t.date || \"\",\n      t.symbol || \"\",\n      t.name || \"\",\n      t.type || \"\",\n      t.tradeMethod || \"cash\",\n      t.price || 0,\n      t.quantity || 0,\n      t.fee || 0,\n      t.totalAmount || (t.price * t.quantity),\n      t.reason || \"\",\n      (t.behavior_tags || []).join(\", \"),\n      t.timing || \"\",\n      t.ai_comment || \"\",\n      nowStr\n    ]);\n\n    txSheet.getRange(2, 1, rows.length, headers.length).setValues(rows);\n  }\n\n  // 備份現價表 (持股現價工作表)\n  const holdingsSheet = getOrCreateSheet(SHEET_HOLDINGS);\n  holdingsSheet.clear();\n  const hHeaders = [\"股票代號\", \"最新現價\", \"備份時間\"];\n  holdingsSheet.appendRow(hHeaders);\n  holdingsSheet.getRange(1, 1, 1, hHeaders.length)\n               .setBackground(\"#131922\")\n               .setFontColor(\"#79c0ff\")\n               .setFontWeight(\"bold\")\n               .setHorizontalAlignment(\"center\");\n  holdingsSheet.setFrozenRows(1);\n\n  const priceEntries = Object.entries(priceOverrides);\n  if (priceEntries.length > 0) {\n    const pRows = priceEntries.map(([sym, px]) => [sym, px, nowStr]);\n    holdingsSheet.getRange(2, 1, pRows.length, hHeaders.length).setValues(pRows);\n  }\n\n  // 記錄 Log\n  const logSheet = getOrCreateSheet(SHEET_LOGS);\n  if (logSheet.getLastRow() === 0) {\n    logSheet.appendRow([\"時間\", \"操作\", \"筆數\", \"狀態\"]);\n    logSheet.getRange(1, 1, 1, 4).setBackground(\"#131922\").setFontColor(\"#e6edf3\").setFontWeight(\"bold\");\n    logSheet.setFrozenRows(1);\n  }\n  logSheet.appendRow([nowStr, \"備份寫入 (Backup)\", transactions.length + \" 筆交易\", \"成功\"]);\n\n  return {\n    status: \"success\",\n    message: \"成功備份 \" + transactions.length + \" 筆交易與現價資料至 Google 表格！\",\n    count: transactions.length,\n    timestamp: nowStr\n  };\n}\n\n/**\n * 從 Google 表格還原資料至 TradeLog 前端\n */\nfunction handleRestore() {\n  const ss = SpreadsheetApp.getActiveSpreadsheet();\n  const txSheet = ss.getSheetByName(SHEET_TX);\n  \n  if (!txSheet || txSheet.getLastRow() <= 1) {\n    return {\n      status: \"success\",\n      transactions: [],\n      priceOverrides: {},\n      message: \"表格內尚無備份資料\"\n    };\n  }\n\n  const values = txSheet.getDataRange().getValues();\n  const transactions = [];\n\n  for (let i = 1; i < values.length; i++) {\n    const row = values[i];\n    if (!row[0] && !row[2]) continue;\n\n    transactions.push({\n      id: String(row[0]),\n      date: typeof row[1] === 'object' ? Utilities.formatDate(row[1], \"Asia/Taipei\", \"yyyy-MM-dd\") : String(row[1]),\n      symbol: String(row[2]),\n      name: String(row[3]),\n      type: String(row[4]),\n      tradeMethod: String(row[5] || 'cash'),\n      price: parseFloat(row[6]) || 0,\n      quantity: parseFloat(row[7]) || 0,\n      fee: parseFloat(row[8]) || 0,\n      totalAmount: parseFloat(row[9]) || (parseFloat(row[6]) * parseFloat(row[7])),\n      reason: String(row[10] || \"\"),\n      behavior_tags: row[11] ? String(row[11]).split(\",\").map(s => s.trim()).filter(Boolean) : [],\n      timing: String(row[12] || \"合理\"),\n      ai_comment: String(row[13] || \"\"),\n      confidence: 100\n    });\n  }\n\n  // 讀取現價\n  const priceOverrides = {};\n  const holdingsSheet = ss.getSheetByName(SHEET_HOLDINGS);\n  if (holdingsSheet && holdingsSheet.getLastRow() > 1) {\n    const hValues = holdingsSheet.getDataRange().getValues();\n    for (let j = 1; j < hValues.length; j++) {\n      const sym = String(hValues[j][0]).trim();\n      const px = parseFloat(hValues[j][1]);\n      if (sym && !isNaN(px)) {\n        priceOverrides[sym] = px;\n      }\n    }\n  }\n\n  return {\n    status: \"success\",\n    transactions: transactions,\n    priceOverrides: priceOverrides,\n    count: transactions.length,\n    message: \"成功從 Google 表格還原 \" + transactions.length + \" 筆交易！\"\n  };\n}\n\n/**\n * 查詢台股即時/盤中最新股價\n * 支援代號自動匹配上市 (.TW) 或上櫃 (.TWO)\n */\nfunction handleFetchPrices(symbols) {\n  if (!symbols || symbols.length === 0) {\n    return { status: \"success\", prices: {}, details: {} };\n  }\n\n  const cleanSymbols = symbols.map(s => String(s).trim().toUpperCase()).filter(Boolean);\n  const prices = {};\n  const details = {};\n\n  cleanSymbols.forEach(sym => {\n    const q = fetchSingleStockPrice(sym);\n    if (q && q.price !== null) {\n      prices[sym] = q.price;\n      details[sym] = q;\n    }\n  });\n\n  // 更新至持股現價表\n  if (Object.keys(prices).length > 0) {\n    try {\n      const holdingsSheet = getOrCreateSheet(SHEET_HOLDINGS);\n      const nowStr = Utilities.formatDate(new Date(), \"Asia/Taipei\", \"yyyy-MM-dd HH:mm:ss\");\n      \n      // 讀取現有內容\n      const existing = {};\n      if (holdingsSheet.getLastRow() > 1) {\n        const rows = holdingsSheet.getDataRange().getValues();\n        for (let i = 1; i < rows.length; i++) {\n          existing[String(rows[i][0]).trim()] = rows[i][1];\n        }\n      }\n\n      // 合併新價格\n      for (let s in prices) {\n        existing[s] = prices[s];\n      }\n\n      holdingsSheet.clear();\n      holdingsSheet.appendRow([\"股票代號\", \"最新現價\", \"更新時間\"]);\n      holdingsSheet.getRange(1, 1, 1, 3)\n                   .setBackground(\"#131922\")\n                   .setFontColor(\"#79c0ff\")\n                   .setFontWeight(\"bold\")\n                   .setHorizontalAlignment(\"center\");\n      holdingsSheet.setFrozenRows(1);\n\n      const updatedRows = Object.entries(existing).map(([s, p]) => [s, p, nowStr]);\n      if (updatedRows.length > 0) {\n        holdingsSheet.getRange(2, 1, updatedRows.length, 3).setValues(updatedRows);\n      }\n    } catch (err) {\n      console.error(\"更新現價表失敗: \" + err);\n    }\n  }\n\n  return {\n    status: \"success\",\n    prices: prices,\n    details: details,\n    updatedAt: Utilities.formatDate(new Date(), \"Asia/Taipei\", \"yyyy-MM-dd HH:mm:ss\")\n  };\n}\n\n/**\n * 查詢單檔台股現價（依序嘗試 .TW 上市與 .TWO 上櫃）\n */\nfunction fetchSingleStockPrice(symbol) {\n  const cleanSym = symbol.replace(/\\.TW$|\\.TWO$/i, \"\");\n  const suffixes = [\".TW\", \".TWO\"];\n\n  for (let i = 0; i < suffixes.length; i++) {\n    const ticker = cleanSym + suffixes[i];\n    const url = \"https://query1.finance.yahoo.com/v8/finance/chart/\" + ticker + \"?interval=1d&range=1d\";\n    \n    try {\n      const resp = UrlFetchApp.fetch(url, {\n        muteHttpExceptions: true,\n        headers: {\n          \"User-Agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64)\"\n        }\n      });\n\n      if (resp.getResponseCode() === 200) {\n        const json = JSON.parse(resp.getContentText());\n        const result = json.chart && json.chart.result && json.chart.result[0];\n        if (result && result.meta) {\n          const meta = result.meta;\n          const curPrice = meta.regularMarketPrice;\n          const prevClose = meta.chartPreviousClose || meta.previousClose;\n          const change = curPrice && prevClose ? parseFloat((curPrice - prevClose).toFixed(2)) : 0;\n          const changePct = prevClose ? parseFloat(((change / prevClose) * 100).toFixed(2)) : 0;\n\n          if (curPrice !== undefined && curPrice !== null) {\n            return {\n              symbol: cleanSym,\n              ticker: ticker,\n              price: curPrice,\n              previousClose: prevClose,\n              change: change,\n              changePct: changePct,\n              currency: meta.currency || \"TWD\"\n            };\n          }\n        }\n      }\n    } catch (e) {\n      // 嘗試下一個 suffix\n    }\n  }\n\n  return null;\n}\n";
+const GAS_SOURCE_CODE = "/**
+ * ==============================================================================
+ * TradeLog Google Apps Script (GAS) 雲端後端與即時股價 API
+ * ==============================================================================
+ * 
+ * 功能：
+ * 1. 交易紀錄備份（自動存入 Google 表格「交易紀錄」）
+ * 2. 交易紀錄還原（從 Google 表格拉取所有紀錄還原至前端 LocalStorage）
+ * 3. 台灣股市即時 / 最新盤中股價查詢（支援上市 .TW 與上櫃 .TWO，自動判定）
+ * 4. 試算表自動建立美化欄位與公式
+ * 5. 智慧相容：無論從 Google 試算表或直接由 script.google.com 建立，皆全自動防呆連線！
+ */
+
+// 可在此填入欲指定的 Google 試算表 ID（若留空且未綁定表格，系統將自動於雲端硬碟建立「TradeLog 投資帳本」）
+const SPREADSHEET_ID = \"\";
+
+// 試算表工作表名稱定義
+const SHEET_TX = \"交易紀錄\";
+const SHEET_HOLDINGS = \"持股現價\";
+const SHEET_LOGS = \"備份日誌\";
+
+/**
+ * 取得試算表實例（智慧相容模式，支援綁定表格、指定 ID 與自動建表）
+ */
+function getSpreadsheet() {
+  // 1. 若有指定 SPREADSHEET_ID 則優先使用
+  if (typeof SPREADSHEET_ID === \"string\" && SPREADSHEET_ID.trim() !== \"\") {
+    try {
+      return SpreadsheetApp.openById(SPREADSHEET_ID.trim());
+    } catch (e) {
+      console.error(\"無法依指定 ID 開啟試算表: \" + e.message);
+    }
+  }
+
+  // 2. 若為試算表容器綁定腳本 (Container-bound Script)
+  const active = SpreadsheetApp.getActiveSpreadsheet();
+  if (active) return active;
+
+  // 3. 若為獨立專案 (Standalone Project)，檢查是否已自動建立過試算表
+  const props = PropertiesService.getScriptProperties();
+  const autoId = props.getProperty(\"AUTOGEN_SPREADSHEET_ID\");
+  if (autoId) {
+    try {
+      return SpreadsheetApp.openById(autoId);
+    } catch (e) {
+      console.warn(\"先前自動建立之試算表已不存在，重新建立...\");
+    }
+  }
+
+  // 自動建立專屬試算表，免手動建表與填 ID！
+  const newSs = SpreadsheetApp.create(\"TradeLog 投資帳本\");
+  props.setProperty(\"AUTOGEN_SPREADSHEET_ID\", newSs.getId());
+  return newSs;
+}
+
+/**
+ * 取得或自動建立指定的工作表
+ */
+function getOrCreateSheet(sheetName) {
+  const ss = getSpreadsheet();
+  let sheet = ss.getSheetByName(sheetName);
+  if (!sheet) {
+    sheet = ss.insertSheet(sheetName);
+  }
+  return sheet;
+}
+
+/**
+ * 處理 GET 請求
+ * 支援:
+ * ?action=restore (還原交易與現價)
+ * ?action=fetch_prices&symbols=2330,2449,6274 (查詢即時股價)
+ * ?action=ping (測試連線)
+ */
+function doGet(e) {
+  return handleRequest(e, \"GET\");
+}
+
+/**
+ * 處理 POST 請求
+ * 支援:
+ * action=\"backup\" (備份資料至表格)
+ * action=\"fetch_prices\" (查詢即時股價)
+ * action=\"restore\" (還原資料)
+ */
+function doPost(e) {
+  return handleRequest(e, \"POST\");
+}
+
+function handleRequest(e, method) {
+  try {
+    let params = {};
+    if (e && e.parameter) {
+      params = e.parameter;
+    }
+    
+    // 解析 POST 內容 (支援 text/plain 與 application/json)
+    let postData = null;
+    if (e && e.postData && e.postData.contents) {
+      try {
+        postData = JSON.parse(e.postData.contents);
+      } catch (err) {
+        // 若不是純 JSON 則忽略
+      }
+    }
+
+    const action = (postData && postData.action) || params.action || \"ping\";
+
+    let responseData = {};
+
+    switch (action) {
+      case \"ping\":
+        const ssInstance = getSpreadsheet();
+        responseData = {
+          status: \"success\",
+          message: \"TradeLog Google Apps Script API 運作正常！\",
+          sheetUrl: ssInstance ? ssInstance.getUrl() : null,
+          sheetName: ssInstance ? ssInstance.getName() : null,
+          timestamp: new Date().toISOString()
+        };
+        break;
+
+      case \"backup\":
+        responseData = handleBackup(postData || params);
+        break;
+
+      case \"restore\":
+        responseData = handleRestore();
+        break;
+
+      case \"fetch_prices\":
+        const symbols = (postData && postData.symbols) || (params.symbols ? params.symbols.split(\",\") : []);
+        responseData = handleFetchPrices(symbols);
+        break;
+
+      default:
+        responseData = { status: \"error\", message: \"未知的 action: \" + action };
+    }
+
+    return createJsonResponse(responseData);
+  } catch (error) {
+    return createJsonResponse({
+      status: \"error\",
+      message: error.toString(),
+      stack: error.stack
+    });
+  }
+}
+
+function createJsonResponse(data) {
+  const output = ContentService.createTextOutput(JSON.stringify(data));
+  output.setMimeType(ContentService.MimeType.JSON);
+  return output;
+}
+
+/**
+ * 備份所有交易資料與現價至 Google 表格
+ */
+function handleBackup(payload) {
+  const transactions = payload.transactions || [];
+  const priceOverrides = payload.priceOverrides || {};
+
+  const ss = getSpreadsheet();
+  const txSheet = getOrCreateSheet(SHEET_TX);
+
+  // 初始化 / 清理並重寫標題列
+  txSheet.clear();
+  const headers = [
+    \"交易ID\", \"交易日期\", \"股票代號\", \"股票名稱\", \"類型\", 
+    \"交易方式\", \"成交價格\", \"成交股數\", \"手續費\", \"總金額\", 
+    \"買賣理由\", \"AI行為標籤\", \"進出場時機\", \"AI短評\", \"備份更新時間\"
+  ];
+
+  txSheet.appendRow(headers);
+  
+  // 美化標題列
+  const headerRange = txSheet.getRange(1, 1, 1, headers.length);
+  headerRange.setBackground(\"#131922\")
+             .setFontColor(\"#d4a843\")
+             .setFontWeight(\"bold\")
+             .setHorizontalAlignment(\"center\");
+  txSheet.setFrozenRows(1);
+
+  const nowStr = Utilities.formatDate(new Date(), \"Asia/Taipei\", \"yyyy-MM-dd HH:mm:ss\");
+
+  // 寫入交易列
+  if (transactions.length > 0) {
+    const rows = transactions.map(t => [
+      t.id || \"\",
+      t.date || \"\",
+      t.symbol || \"\",
+      t.name || \"\",
+      t.type || \"\",
+      t.tradeMethod || \"cash\",
+      t.price || 0,
+      t.quantity || 0,
+      t.fee || 0,
+      t.totalAmount || (t.price * t.quantity),
+      t.reason || \"\",
+      (t.behavior_tags || []).join(\", \"),
+      t.timing || \"\",
+      t.ai_comment || \"\",
+      nowStr
+    ]);
+
+    txSheet.getRange(2, 1, rows.length, headers.length).setValues(rows);
+  }
+
+  // 備份現價表 (持股現價工作表)
+  const holdingsSheet = getOrCreateSheet(SHEET_HOLDINGS);
+  holdingsSheet.clear();
+  const hHeaders = [\"股票代號\", \"最新現價\", \"備份時間\"];
+  holdingsSheet.appendRow(hHeaders);
+  holdingsSheet.getRange(1, 1, 1, hHeaders.length)
+               .setBackground(\"#131922\")
+               .setFontColor(\"#79c0ff\")
+               .setFontWeight(\"bold\")
+               .setHorizontalAlignment(\"center\");
+  holdingsSheet.setFrozenRows(1);
+
+  const priceEntries = Object.entries(priceOverrides);
+  if (priceEntries.length > 0) {
+    const pRows = priceEntries.map(([sym, px]) => [sym, px, nowStr]);
+    holdingsSheet.getRange(2, 1, pRows.length, hHeaders.length).setValues(pRows);
+  }
+
+  // 記錄 Log
+  const logSheet = getOrCreateSheet(SHEET_LOGS);
+  if (logSheet.getLastRow() === 0) {
+    logSheet.appendRow([\"時間\", \"操作\", \"筆數\", \"狀態\"]);
+    logSheet.getRange(1, 1, 1, 4).setBackground(\"#131922\").setFontColor(\"#e6edf3\").setFontWeight(\"bold\");
+    logSheet.setFrozenRows(1);
+  }
+  logSheet.appendRow([nowStr, \"備份寫入 (Backup)\", transactions.length + \" 筆交易\", \"成功\"]);
+
+  return {
+    status: \"success\",
+    message: \"成功備份 \" + transactions.length + \" 筆交易與現價資料至 Google 表格！\",
+    sheetUrl: ss.getUrl(),
+    sheetName: ss.getName(),
+    count: transactions.length,
+    timestamp: nowStr
+  };
+}
+
+/**
+ * 從 Google 表格還原資料至 TradeLog 前端
+ */
+function handleRestore() {
+  const ss = getSpreadsheet();
+  const txSheet = ss.getSheetByName(SHEET_TX);
+  
+  if (!txSheet || txSheet.getLastRow() <= 1) {
+    return {
+      status: \"success\",
+      transactions: [],
+      priceOverrides: {},
+      sheetUrl: ss.getUrl(),
+      message: \"表格內尚無備份資料\"
+    };
+  }
+
+  const values = txSheet.getDataRange().getValues();
+  const transactions = [];
+
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i];
+    if (!row[0] && !row[2]) continue;
+
+    transactions.push({
+      id: String(row[0]),
+      date: typeof row[1] === 'object' ? Utilities.formatDate(row[1], \"Asia/Taipei\", \"yyyy-MM-dd\") : String(row[1]),
+      symbol: String(row[2]),
+      name: String(row[3]),
+      type: String(row[4]),
+      tradeMethod: String(row[5] || 'cash'),
+      price: parseFloat(row[6]) || 0,
+      quantity: parseFloat(row[7]) || 0,
+      fee: parseFloat(row[8]) || 0,
+      totalAmount: parseFloat(row[9]) || (parseFloat(row[6]) * parseFloat(row[7])),
+      reason: String(row[10] || \"\"),
+      behavior_tags: row[11] ? String(row[11]).split(\",\").map(s => s.trim()).filter(Boolean) : [],
+      timing: String(row[12] || \"合理\"),
+      ai_comment: String(row[13] || \"\"),
+      confidence: 100
+    });
+  }
+
+  // 讀取現價
+  const priceOverrides = {};
+  const holdingsSheet = ss.getSheetByName(SHEET_HOLDINGS);
+  if (holdingsSheet && holdingsSheet.getLastRow() > 1) {
+    const hValues = holdingsSheet.getDataRange().getValues();
+    for (let j = 1; j < hValues.length; j++) {
+      const sym = String(hValues[j][0]).trim();
+      const px = parseFloat(hValues[j][1]);
+      if (sym && !isNaN(px)) {
+        priceOverrides[sym] = px;
+      }
+    }
+  }
+
+  return {
+    status: \"success\",
+    transactions: transactions,
+    priceOverrides: priceOverrides,
+    sheetUrl: ss.getUrl(),
+    count: transactions.length,
+    message: \"成功從 Google 表格還原 \" + transactions.length + \" 筆交易！\"
+  };
+}
+
+/**
+ * 查詢台股即時/盤中最新股價
+ * 支援代號自動匹配上市 (.TW) 或上櫃 (.TWO)
+ */
+function handleFetchPrices(symbols) {
+  if (!symbols || symbols.length === 0) {
+    return { status: \"success\", prices: {}, details: {} };
+  }
+
+  const cleanSymbols = symbols.map(s => String(s).trim().toUpperCase()).filter(Boolean);
+  const prices = {};
+  const details = {};
+
+  cleanSymbols.forEach(sym => {
+    const q = fetchSingleStockPrice(sym);
+    if (q && q.price !== null) {
+      prices[sym] = q.price;
+      details[sym] = q;
+    }
+  });
+
+  // 更新至持股現價表
+  if (Object.keys(prices).length > 0) {
+    try {
+      const holdingsSheet = getOrCreateSheet(SHEET_HOLDINGS);
+      const nowStr = Utilities.formatDate(new Date(), \"Asia/Taipei\", \"yyyy-MM-dd HH:mm:ss\");
+      
+      // 讀取現有內容
+      const existing = {};
+      if (holdingsSheet.getLastRow() > 1) {
+        const rows = holdingsSheet.getDataRange().getValues();
+        for (let i = 1; i < rows.length; i++) {
+          existing[String(rows[i][0]).trim()] = rows[i][1];
+        }
+      }
+
+      // 合併新價格
+      for (let s in prices) {
+        existing[s] = prices[s];
+      }
+
+      holdingsSheet.clear();
+      holdingsSheet.appendRow([\"股票代號\", \"最新現價\", \"更新時間\"]);
+      holdingsSheet.getRange(1, 1, 1, 3)
+                   .setBackground(\"#131922\")
+                   .setFontColor(\"#79c0ff\")
+                   .setFontWeight(\"bold\")
+                   .setHorizontalAlignment(\"center\");
+      holdingsSheet.setFrozenRows(1);
+
+      const updatedRows = Object.entries(existing).map(([s, p]) => [s, p, nowStr]);
+      if (updatedRows.length > 0) {
+        holdingsSheet.getRange(2, 1, updatedRows.length, 3).setValues(updatedRows);
+      }
+    } catch (err) {
+      console.error(\"更新現價表失敗: \" + err);
+    }
+  }
+
+  const ss = getSpreadsheet();
+  return {
+    status: \"success\",
+    prices: prices,
+    details: details,
+    sheetUrl: ss ? ss.getUrl() : null,
+    updatedAt: Utilities.formatDate(new Date(), \"Asia/Taipei\", \"yyyy-MM-dd HH:mm:ss\")
+  };
+}
+
+/**
+ * 查詢單檔台股現價（依序嘗試 .TW 上市與 .TWO 上櫃）
+ */
+function fetchSingleStockPrice(symbol) {
+  const cleanSym = symbol.replace(/\.TW$|\.TWO$/i, \"\");
+  const suffixes = [\".TW\", \".TWO\"];
+
+  for (let i = 0; i < suffixes.length; i++) {
+    const ticker = cleanSym + suffixes[i];
+    const url = \"https://query1.finance.yahoo.com/v8/finance/chart/\" + ticker + \"?interval=1d&range=1d\";
+    
+    try {
+      const resp = UrlFetchApp.fetch(url, {
+        muteHttpExceptions: true,
+        headers: {
+          \"User-Agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64)\"
+        }
+      });
+
+      if (resp.getResponseCode() === 200) {
+        const json = JSON.parse(resp.getContentText());
+        const result = json.chart && json.chart.result && json.chart.result[0];
+        if (result && result.meta) {
+          const meta = result.meta;
+          const curPrice = meta.regularMarketPrice;
+          const prevClose = meta.chartPreviousClose || meta.previousClose;
+          const change = curPrice && prevClose ? parseFloat((curPrice - prevClose).toFixed(2)) : 0;
+          const changePct = prevClose ? parseFloat(((change / prevClose) * 100).toFixed(2)) : 0;
+
+          if (curPrice !== undefined && curPrice !== null) {
+            return {
+              symbol: cleanSym,
+              ticker: ticker,
+              price: curPrice,
+              previousClose: prevClose,
+              change: change,
+              changePct: changePct,
+              currency: meta.currency || \"TWD\"
+            };
+          }
+        }
+      }
+    } catch (e) {
+      // 嘗試下一個 suffix
+    }
+  }
+
+  return null;
+}
+";\nconst SHEET_HOLDINGS = \"持股現價\";\nconst SHEET_LOGS = \"備份日誌\";\n\n/**\n * 處理 GET 請求\n * 支援:\n * ?action=restore (還原交易與現價)\n * ?action=fetch_prices&symbols=2330,2449,6274 (查詢即時股價)\n * ?action=ping (測試連線)\n */\nfunction doGet(e) {\n  return handleRequest(e, \"GET\");\n}\n\n/**\n * 處理 POST 請求\n * 支援:\n * action=\"backup\" (備份資料至表格)\n * action=\"fetch_prices\" (查詢即時股價)\n * action=\"restore\" (還原資料)\n */\nfunction doPost(e) {\n  return handleRequest(e, \"POST\");\n}\n\nfunction handleRequest(e, method) {\n  try {\n    let params = {};\n    if (e && e.parameter) {\n      params = e.parameter;\n    }\n    \n    // 解析 POST 內容 (支援 text/plain 與 application/json)\n    let postData = null;\n    if (e && e.postData && e.postData.contents) {\n      try {\n        postData = JSON.parse(e.postData.contents);\n      } catch (err) {\n        // 若不是純 JSON 則忽略\n      }\n    }\n\n    const action = (postData && postData.action) || params.action || \"ping\";\n\n    let responseData = {};\n\n    switch (action) {\n      case \"ping\":\n        responseData = {\n          status: \"success\",\n          message: \"TradeLog Google Apps Script API 運作正常！\",\n          timestamp: new Date().toISOString()\n        };\n        break;\n\n      case \"backup\":\n        responseData = handleBackup(postData || params);\n        break;\n\n      case \"restore\":\n        responseData = handleRestore();\n        break;\n\n      case \"fetch_prices\":\n        const symbols = (postData && postData.symbols) || (params.symbols ? params.symbols.split(\",\") : []);\n        responseData = handleFetchPrices(symbols);\n        break;\n\n      default:\n        responseData = { status: \"error\", message: \"未知的 action: \" + action };\n    }\n\n    return createJsonResponse(responseData);\n  } catch (error) {\n    return createJsonResponse({\n      status: \"error\",\n      message: error.toString(),\n      stack: error.stack\n    });\n  }\n}\n\nfunction createJsonResponse(data) {\n  const output = ContentService.createTextOutput(JSON.stringify(data));\n  output.setMimeType(ContentService.MimeType.JSON);\n  return output;\n}\n\n/**\n * 取得或自動建立指定的工作表\n */\nfunction getOrCreateSheet(sheetName) {\n  const ss = SpreadsheetApp.getActiveSpreadsheet();\n  let sheet = ss.getSheetByName(sheetName);\n  if (!sheet) {\n    sheet = ss.insertSheet(sheetName);\n  }\n  return sheet;\n}\n\n/**\n * 備份所有交易資料與現價至 Google 表格\n */\nfunction handleBackup(payload) {\n  const transactions = payload.transactions || [];\n  const priceOverrides = payload.priceOverrides || {};\n\n  const ss = SpreadsheetApp.getActiveSpreadsheet();\n  const txSheet = getOrCreateSheet(SHEET_TX);\n\n  // 初始化 / 清理並重寫標題列\n  txSheet.clear();\n  const headers = [\n    \"交易ID\", \"交易日期\", \"股票代號\", \"股票名稱\", \"類型\", \n    \"交易方式\", \"成交價格\", \"成交股數\", \"手續費\", \"總金額\", \n    \"買賣理由\", \"AI行為標籤\", \"進出場時機\", \"AI短評\", \"備份更新時間\"\n  ];\n\n  txSheet.appendRow(headers);\n  \n  // 美化標題列\n  const headerRange = txSheet.getRange(1, 1, 1, headers.length);\n  headerRange.setBackground(\"#131922\")\n             .setFontColor(\"#d4a843\")\n             .setFontWeight(\"bold\")\n             .setHorizontalAlignment(\"center\");\n  txSheet.setFrozenRows(1);\n\n  const nowStr = Utilities.formatDate(new Date(), \"Asia/Taipei\", \"yyyy-MM-dd HH:mm:ss\");\n\n  // 寫入交易列\n  if (transactions.length > 0) {\n    const rows = transactions.map(t => [\n      t.id || \"\",\n      t.date || \"\",\n      t.symbol || \"\",\n      t.name || \"\",\n      t.type || \"\",\n      t.tradeMethod || \"cash\",\n      t.price || 0,\n      t.quantity || 0,\n      t.fee || 0,\n      t.totalAmount || (t.price * t.quantity),\n      t.reason || \"\",\n      (t.behavior_tags || []).join(\", \"),\n      t.timing || \"\",\n      t.ai_comment || \"\",\n      nowStr\n    ]);\n\n    txSheet.getRange(2, 1, rows.length, headers.length).setValues(rows);\n  }\n\n  // 備份現價表 (持股現價工作表)\n  const holdingsSheet = getOrCreateSheet(SHEET_HOLDINGS);\n  holdingsSheet.clear();\n  const hHeaders = [\"股票代號\", \"最新現價\", \"備份時間\"];\n  holdingsSheet.appendRow(hHeaders);\n  holdingsSheet.getRange(1, 1, 1, hHeaders.length)\n               .setBackground(\"#131922\")\n               .setFontColor(\"#79c0ff\")\n               .setFontWeight(\"bold\")\n               .setHorizontalAlignment(\"center\");\n  holdingsSheet.setFrozenRows(1);\n\n  const priceEntries = Object.entries(priceOverrides);\n  if (priceEntries.length > 0) {\n    const pRows = priceEntries.map(([sym, px]) => [sym, px, nowStr]);\n    holdingsSheet.getRange(2, 1, pRows.length, hHeaders.length).setValues(pRows);\n  }\n\n  // 記錄 Log\n  const logSheet = getOrCreateSheet(SHEET_LOGS);\n  if (logSheet.getLastRow() === 0) {\n    logSheet.appendRow([\"時間\", \"操作\", \"筆數\", \"狀態\"]);\n    logSheet.getRange(1, 1, 1, 4).setBackground(\"#131922\").setFontColor(\"#e6edf3\").setFontWeight(\"bold\");\n    logSheet.setFrozenRows(1);\n  }\n  logSheet.appendRow([nowStr, \"備份寫入 (Backup)\", transactions.length + \" 筆交易\", \"成功\"]);\n\n  return {\n    status: \"success\",\n    message: \"成功備份 \" + transactions.length + \" 筆交易與現價資料至 Google 表格！\",\n    count: transactions.length,\n    timestamp: nowStr\n  };\n}\n\n/**\n * 從 Google 表格還原資料至 TradeLog 前端\n */\nfunction handleRestore() {\n  const ss = SpreadsheetApp.getActiveSpreadsheet();\n  const txSheet = ss.getSheetByName(SHEET_TX);\n  \n  if (!txSheet || txSheet.getLastRow() <= 1) {\n    return {\n      status: \"success\",\n      transactions: [],\n      priceOverrides: {},\n      message: \"表格內尚無備份資料\"\n    };\n  }\n\n  const values = txSheet.getDataRange().getValues();\n  const transactions = [];\n\n  for (let i = 1; i < values.length; i++) {\n    const row = values[i];\n    if (!row[0] && !row[2]) continue;\n\n    transactions.push({\n      id: String(row[0]),\n      date: typeof row[1] === 'object' ? Utilities.formatDate(row[1], \"Asia/Taipei\", \"yyyy-MM-dd\") : String(row[1]),\n      symbol: String(row[2]),\n      name: String(row[3]),\n      type: String(row[4]),\n      tradeMethod: String(row[5] || 'cash'),\n      price: parseFloat(row[6]) || 0,\n      quantity: parseFloat(row[7]) || 0,\n      fee: parseFloat(row[8]) || 0,\n      totalAmount: parseFloat(row[9]) || (parseFloat(row[6]) * parseFloat(row[7])),\n      reason: String(row[10] || \"\"),\n      behavior_tags: row[11] ? String(row[11]).split(\",\").map(s => s.trim()).filter(Boolean) : [],\n      timing: String(row[12] || \"合理\"),\n      ai_comment: String(row[13] || \"\"),\n      confidence: 100\n    });\n  }\n\n  // 讀取現價\n  const priceOverrides = {};\n  const holdingsSheet = ss.getSheetByName(SHEET_HOLDINGS);\n  if (holdingsSheet && holdingsSheet.getLastRow() > 1) {\n    const hValues = holdingsSheet.getDataRange().getValues();\n    for (let j = 1; j < hValues.length; j++) {\n      const sym = String(hValues[j][0]).trim();\n      const px = parseFloat(hValues[j][1]);\n      if (sym && !isNaN(px)) {\n        priceOverrides[sym] = px;\n      }\n    }\n  }\n\n  return {\n    status: \"success\",\n    transactions: transactions,\n    priceOverrides: priceOverrides,\n    count: transactions.length,\n    message: \"成功從 Google 表格還原 \" + transactions.length + \" 筆交易！\"\n  };\n}\n\n/**\n * 查詢台股即時/盤中最新股價\n * 支援代號自動匹配上市 (.TW) 或上櫃 (.TWO)\n */\nfunction handleFetchPrices(symbols) {\n  if (!symbols || symbols.length === 0) {\n    return { status: \"success\", prices: {}, details: {} };\n  }\n\n  const cleanSymbols = symbols.map(s => String(s).trim().toUpperCase()).filter(Boolean);\n  const prices = {};\n  const details = {};\n\n  cleanSymbols.forEach(sym => {\n    const q = fetchSingleStockPrice(sym);\n    if (q && q.price !== null) {\n      prices[sym] = q.price;\n      details[sym] = q;\n    }\n  });\n\n  // 更新至持股現價表\n  if (Object.keys(prices).length > 0) {\n    try {\n      const holdingsSheet = getOrCreateSheet(SHEET_HOLDINGS);\n      const nowStr = Utilities.formatDate(new Date(), \"Asia/Taipei\", \"yyyy-MM-dd HH:mm:ss\");\n      \n      // 讀取現有內容\n      const existing = {};\n      if (holdingsSheet.getLastRow() > 1) {\n        const rows = holdingsSheet.getDataRange().getValues();\n        for (let i = 1; i < rows.length; i++) {\n          existing[String(rows[i][0]).trim()] = rows[i][1];\n        }\n      }\n\n      // 合併新價格\n      for (let s in prices) {\n        existing[s] = prices[s];\n      }\n\n      holdingsSheet.clear();\n      holdingsSheet.appendRow([\"股票代號\", \"最新現價\", \"更新時間\"]);\n      holdingsSheet.getRange(1, 1, 1, 3)\n                   .setBackground(\"#131922\")\n                   .setFontColor(\"#79c0ff\")\n                   .setFontWeight(\"bold\")\n                   .setHorizontalAlignment(\"center\");\n      holdingsSheet.setFrozenRows(1);\n\n      const updatedRows = Object.entries(existing).map(([s, p]) => [s, p, nowStr]);\n      if (updatedRows.length > 0) {\n        holdingsSheet.getRange(2, 1, updatedRows.length, 3).setValues(updatedRows);\n      }\n    } catch (err) {\n      console.error(\"更新現價表失敗: \" + err);\n    }\n  }\n\n  return {\n    status: \"success\",\n    prices: prices,\n    details: details,\n    updatedAt: Utilities.formatDate(new Date(), \"Asia/Taipei\", \"yyyy-MM-dd HH:mm:ss\")\n  };\n}\n\n/**\n * 查詢單檔台股現價（依序嘗試 .TW 上市與 .TWO 上櫃）\n */\nfunction fetchSingleStockPrice(symbol) {\n  const cleanSym = symbol.replace(/\\.TW$|\\.TWO$/i, \"\");\n  const suffixes = [\".TW\", \".TWO\"];\n\n  for (let i = 0; i < suffixes.length; i++) {\n    const ticker = cleanSym + suffixes[i];\n    const url = \"https://query1.finance.yahoo.com/v8/finance/chart/\" + ticker + \"?interval=1d&range=1d\";\n    \n    try {\n      const resp = UrlFetchApp.fetch(url, {\n        muteHttpExceptions: true,\n        headers: {\n          \"User-Agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64)\"\n        }\n      });\n\n      if (resp.getResponseCode() === 200) {\n        const json = JSON.parse(resp.getContentText());\n        const result = json.chart && json.chart.result && json.chart.result[0];\n        if (result && result.meta) {\n          const meta = result.meta;\n          const curPrice = meta.regularMarketPrice;\n          const prevClose = meta.chartPreviousClose || meta.previousClose;\n          const change = curPrice && prevClose ? parseFloat((curPrice - prevClose).toFixed(2)) : 0;\n          const changePct = prevClose ? parseFloat(((change / prevClose) * 100).toFixed(2)) : 0;\n\n          if (curPrice !== undefined && curPrice !== null) {\n            return {\n              symbol: cleanSym,\n              ticker: ticker,\n              price: curPrice,\n              previousClose: prevClose,\n              change: change,\n              changePct: changePct,\n              currency: meta.currency || \"TWD\"\n            };\n          }\n        }\n      }\n    } catch (e) {\n      // 嘗試下一個 suffix\n    }\n  }\n\n  return null;\n}\n";
 
 function openCloudModal() {
   const urlInput = document.getElementById('gas-url-input');
@@ -12375,6 +12805,7 @@ function testCloudConnection() {
   .then(res => res.json())
   .then(data => {
     if (data && data.status === 'success') {
+      if (data.sheetUrl) DB.sheetUrl = data.sheetUrl;
       updateCloudStatusBadge();
       showToast('✓ 連線成功！TradeLog 後端 API 運作正常');
     } else {
