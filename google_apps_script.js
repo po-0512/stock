@@ -8,12 +8,62 @@
  * 2. 交易紀錄還原（從 Google 表格拉取所有紀錄還原至前端 LocalStorage）
  * 3. 台灣股市即時 / 最新盤中股價查詢（支援上市 .TW 與上櫃 .TWO，自動判定）
  * 4. 試算表自動建立美化欄位與公式
+ * 5. 智慧相容：無論從 Google 試算表或直接由 script.google.com 建立，皆全自動防呆連線！
  */
+
+// 可在此填入欲指定的 Google 試算表 ID（若留空且未綁定表格，系統將自動於雲端硬碟建立「TradeLog 投資帳本」）
+const SPREADSHEET_ID = "";
 
 // 試算表工作表名稱定義
 const SHEET_TX = "交易紀錄";
 const SHEET_HOLDINGS = "持股現價";
 const SHEET_LOGS = "備份日誌";
+
+/**
+ * 取得試算表實例（智慧相容模式，支援綁定表格、指定 ID 與自動建表）
+ */
+function getSpreadsheet() {
+  // 1. 若有指定 SPREADSHEET_ID 則優先使用
+  if (typeof SPREADSHEET_ID === "string" && SPREADSHEET_ID.trim() !== "") {
+    try {
+      return SpreadsheetApp.openById(SPREADSHEET_ID.trim());
+    } catch (e) {
+      console.error("無法依指定 ID 開啟試算表: " + e.message);
+    }
+  }
+
+  // 2. 若為試算表容器綁定腳本 (Container-bound Script)
+  const active = SpreadsheetApp.getActiveSpreadsheet();
+  if (active) return active;
+
+  // 3. 若為獨立專案 (Standalone Project)，檢查是否已自動建立過試算表
+  const props = PropertiesService.getScriptProperties();
+  const autoId = props.getProperty("AUTOGEN_SPREADSHEET_ID");
+  if (autoId) {
+    try {
+      return SpreadsheetApp.openById(autoId);
+    } catch (e) {
+      console.warn("先前自動建立之試算表已不存在，重新建立...");
+    }
+  }
+
+  // 自動建立專屬試算表，免手動建表與填 ID！
+  const newSs = SpreadsheetApp.create("TradeLog 投資帳本");
+  props.setProperty("AUTOGEN_SPREADSHEET_ID", newSs.getId());
+  return newSs;
+}
+
+/**
+ * 取得或自動建立指定的工作表
+ */
+function getOrCreateSheet(sheetName) {
+  const ss = getSpreadsheet();
+  let sheet = ss.getSheetByName(sheetName);
+  if (!sheet) {
+    sheet = ss.insertSheet(sheetName);
+  }
+  return sheet;
+}
 
 /**
  * 處理 GET 請求
@@ -60,9 +110,12 @@ function handleRequest(e, method) {
 
     switch (action) {
       case "ping":
+        const ssInstance = getSpreadsheet();
         responseData = {
           status: "success",
           message: "TradeLog Google Apps Script API 運作正常！",
+          sheetUrl: ssInstance ? ssInstance.getUrl() : null,
+          sheetName: ssInstance ? ssInstance.getName() : null,
           timestamp: new Date().toISOString()
         };
         break;
@@ -101,25 +154,13 @@ function createJsonResponse(data) {
 }
 
 /**
- * 取得或自動建立指定的工作表
- */
-function getOrCreateSheet(sheetName) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  let sheet = ss.getSheetByName(sheetName);
-  if (!sheet) {
-    sheet = ss.insertSheet(sheetName);
-  }
-  return sheet;
-}
-
-/**
  * 備份所有交易資料與現價至 Google 表格
  */
 function handleBackup(payload) {
   const transactions = payload.transactions || [];
   const priceOverrides = payload.priceOverrides || {};
 
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = getSpreadsheet();
   const txSheet = getOrCreateSheet(SHEET_TX);
 
   // 初始化 / 清理並重寫標題列
@@ -195,6 +236,8 @@ function handleBackup(payload) {
   return {
     status: "success",
     message: "成功備份 " + transactions.length + " 筆交易與現價資料至 Google 表格！",
+    sheetUrl: ss.getUrl(),
+    sheetName: ss.getName(),
     count: transactions.length,
     timestamp: nowStr
   };
@@ -204,7 +247,7 @@ function handleBackup(payload) {
  * 從 Google 表格還原資料至 TradeLog 前端
  */
 function handleRestore() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = getSpreadsheet();
   const txSheet = ss.getSheetByName(SHEET_TX);
   
   if (!txSheet || txSheet.getLastRow() <= 1) {
@@ -212,6 +255,7 @@ function handleRestore() {
       status: "success",
       transactions: [],
       priceOverrides: {},
+      sheetUrl: ss.getUrl(),
       message: "表格內尚無備份資料"
     };
   }
@@ -260,6 +304,7 @@ function handleRestore() {
     status: "success",
     transactions: transactions,
     priceOverrides: priceOverrides,
+    sheetUrl: ss.getUrl(),
     count: transactions.length,
     message: "成功從 Google 表格還原 " + transactions.length + " 筆交易！"
   };
@@ -324,10 +369,12 @@ function handleFetchPrices(symbols) {
     }
   }
 
+  const ss = getSpreadsheet();
   return {
     status: "success",
     prices: prices,
     details: details,
+    sheetUrl: ss ? ss.getUrl() : null,
     updatedAt: Utilities.formatDate(new Date(), "Asia/Taipei", "yyyy-MM-dd HH:mm:ss")
   };
 }
