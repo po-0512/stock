@@ -40,15 +40,11 @@
 
   --border-soft: #162030;
 
-
-
   --text-primary:   #e6edf3;
 
   --text-secondary: #7d8590;
 
   --text-muted:     #484f58;
-
-
 
   --gain:         #964444;
 
@@ -66,13 +62,9 @@
 
   --gold-soft:    rgba(212,168,67,0.12);
 
-
-
   --tag-bg:     #1e2d3d;
 
   --tag-text:   #79c0ff;
-
-
 
   --radius-sm:  6px;
 
@@ -80,13 +72,9 @@
 
   --radius-lg:  16px;
 
-
-
   --font-mono: 'JetBrains Mono', monospace;
 
   --font-ui:   'Noto Sans TC', sans-serif;
-
-
 
   --header-h: 56px;
 
@@ -94,11 +82,7 @@
 
 }
 
-
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-
 
 html, body {
 
@@ -120,8 +104,6 @@ html, body {
 
 }
 
-
-
 /* =============================
 
    SCROLLBAR
@@ -133,8 +115,6 @@ html, body {
 ::-webkit-scrollbar-track { background: transparent; }
 
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-
 
 /* =============================
 
@@ -157,8 +137,6 @@ html, body {
   position: relative;
 
 }
-
-
 
 /* =============================
 
@@ -194,8 +172,6 @@ html, body {
 
 }
 
-
-
 .header-brand {
 
   font-family: var(--font-mono);
@@ -214,8 +190,6 @@ html, body {
 
 }
 
-
-
 .header-stats {
 
   display: flex;
@@ -230,8 +204,6 @@ html, body {
 
 }
 
-
-
 .header-stat {
 
   display: flex;
@@ -241,8 +213,6 @@ html, body {
   align-items: center;
 
 }
-
-
 
 .header-stat-label {
 
@@ -258,8 +228,6 @@ html, body {
 
 }
 
-
-
 .header-stat-value {
 
   font-family: var(--font-mono);
@@ -272,8 +240,6 @@ html, body {
 
 }
 
-
-
 .header-actions {
 
   display: flex;
@@ -285,8 +251,6 @@ html, body {
   flex-shrink: 0;
 
 }
-
-
 
 .btn-tab-switch {
 
@@ -314,8 +278,6 @@ html, body {
 
 }
 
-
-
 .btn-tab-switch:hover,
 
 .btn-tab-switch.active {
@@ -327,8 +289,6 @@ html, body {
   background: var(--gold-soft);
 
 }
-
-
 
 .btn-add {
 
@@ -364,13 +324,9 @@ html, body {
 
 }
 
-
-
 .btn-add:hover { transform: scale(1.1); }
 
 .btn-add:active { transform: scale(0.95); }
-
-
 
 /* =============================
 
@@ -388,15 +344,11 @@ html, body {
 
 }
 
-
-
 /* Page visibility */
 
 .page { display: none; }
 
 .page.active { display: block; }
-
-
 
 /* =============================
 
@@ -410,8 +362,6 @@ html, body {
 
 }
 
-
-
 .summary-grid {
 
   display: grid;
@@ -421,8 +371,6 @@ html, body {
   gap: 8px;
 
 }
-
-
 
 .summary-card {
 
@@ -440,8 +388,6 @@ html, body {
 
 }
 
-
-
 .summary-card::before {
 
   content: '';
@@ -458,8 +404,6 @@ html, body {
 
 }
 
-
-
 .summary-card.gain-card { --accent-color: var(--gain); }
 
 .summary-card.loss-card { --accent-color: var(--loss); }
@@ -467,8 +411,6 @@ html, body {
 .summary-card.neutral-card { --accent-color: var(--neutral); }
 
 .summary-card.gold-card { --accent-color: var(--gold); }
-
-
 
 .summary-card-label {
 
@@ -486,8 +428,6 @@ html, body {
 
 }
 
-
-
 .summary-card-value {
 
   font-family: var(--font-mono);
@@ -502,8 +442,6 @@ html, body {
 
 }
 
-
-
 .summary-card-sub {
 
   font-family: var(--font-mono);
@@ -516,8 +454,6 @@ html, body {
 
 }
 
-
-
 .text-gain { color: var(--gain); }
 
 .text-loss { color: var(--loss); }
@@ -527,8 +463,6 @@ html, body {
 .text-gold { color: var(--gold); }
 
 .text-muted { color: var(--text-muted); }
-
-
 
 /* =============================
 
@@ -552,15 +486,11 @@ html, body {
 
 }
 
-
-
 .stats-accordion.open {
 
   border-color: rgba(149,173,219,0.2);
 
 }
-
-
 
 /* ── Collapsed header row ── */
 
@@ -582,15 +512,11 @@ html, body {
 
 }
 
-
-
 .stats-summary-row:hover {
 
   background: var(--bg-elevated);
 
 }
-
-
 
 .stats-bar-item {
 
@@ -608,8 +534,6 @@ html, body {
 
 }
 
-
-
 .stats-bar-item + .stats-bar-item::before {
 
   content: '';
@@ -623,8 +547,6 @@ html, body {
   background: var(--border);
 
 }
-
-
 
 .stats-bar-label {
 
@@ -640,8 +562,6 @@ html, body {
 
 }
 
-
-
 .stats-bar-value {
 
   font-family: var(--font-mono);
@@ -651,8 +571,6 @@ html, body {
   font-weight: 600;
 
 }
-
-
 
 .stats-chevron {
 
@@ -676,15 +594,11 @@ html, body {
 
 }
 
-
-
 .stats-accordion.open .stats-chevron {
 
   transform: rotate(180deg);
 
 }
-
-
 
 /* ── Expanded panel ── */
 
@@ -700,8 +614,6 @@ html, body {
 
 }
 
-
-
 .stats-accordion.open .stats-detail-panel {
 
   max-height: 600px;
@@ -709,8 +621,6 @@ html, body {
   border-top-color: var(--border-soft);
 
 }
-
-
 
 .stats-detail-inner {
 
@@ -724,8 +634,6 @@ html, body {
 
 }
 
-
-
 /* Score rules block */
 
 .stats-rules-grid {
@@ -738,8 +646,6 @@ html, body {
 
 }
 
-
-
 .stats-rule-card {
 
   background: var(--bg-elevated);
@@ -751,8 +657,6 @@ html, body {
   padding: 10px;
 
 }
-
-
 
 .stats-rule-card-title {
 
@@ -770,8 +674,6 @@ html, body {
 
 }
 
-
-
 .stats-rule-item {
 
   display: flex;
@@ -784,8 +686,6 @@ html, body {
 
 }
 
-
-
 .stats-rule-cond {
 
   font-family: var(--font-mono);
@@ -796,8 +696,6 @@ html, body {
 
 }
 
-
-
 .stats-rule-score {
 
   font-family: var(--font-mono);
@@ -807,8 +705,6 @@ html, body {
   font-weight: 700;
 
 }
-
-
 
 /* Behavior bars */
 
@@ -830,8 +726,6 @@ html, body {
 
 }
 
-
-
 .stats-behavior-row {
 
   display: flex;
@@ -843,8 +737,6 @@ html, body {
   margin-bottom: 6px;
 
 }
-
-
 
 .stats-behavior-name {
 
@@ -860,8 +752,6 @@ html, body {
 
 }
 
-
-
 .stats-behavior-track {
 
   flex: 1;
@@ -876,8 +766,6 @@ html, body {
 
 }
 
-
-
 .stats-behavior-fill {
 
   height: 100%;
@@ -889,8 +777,6 @@ html, body {
   transition: width 0.4s ease;
 
 }
-
-
 
 .stats-behavior-count {
 
@@ -906,8 +792,6 @@ html, body {
 
 }
 
-
-
 /* Timing distribution */
 
 .stats-timing-row {
@@ -917,8 +801,6 @@ html, body {
   gap: 6px;
 
 }
-
-
 
 .stats-timing-item {
 
@@ -942,8 +824,6 @@ html, body {
 
 }
 
-
-
 .stats-timing-label {
 
   font-family: var(--font-mono);
@@ -953,8 +833,6 @@ html, body {
   letter-spacing: 0.04em;
 
 }
-
-
 
 .stats-timing-count {
 
@@ -966,8 +844,6 @@ html, body {
 
 }
 
-
-
 .stats-timing-pct {
 
   font-family: var(--font-mono);
@@ -977,8 +853,6 @@ html, body {
   color: var(--text-muted);
 
 }
-
-
 
 /* =============================
 
@@ -992,8 +866,6 @@ html, body {
 
 }
 
-
-
 .section-header {
 
   display: flex;
@@ -1005,8 +877,6 @@ html, body {
   margin-bottom: 8px;
 
 }
-
-
 
 .section-title {
 
@@ -1024,8 +894,6 @@ html, body {
 
 }
 
-
-
 .chart-controls {
 
   display: flex;
@@ -1033,8 +901,6 @@ html, body {
   gap: 4px;
 
 }
-
-
 
 .chart-btn {
 
@@ -1062,8 +928,6 @@ html, body {
 
 }
 
-
-
 .chart-btn.active {
 
   background: var(--neutral-soft);
@@ -1074,8 +938,6 @@ html, body {
 
 }
 
-
-
 .chart-range-btns {
 
   display: flex;
@@ -1083,8 +945,6 @@ html, body {
   gap: 4px;
 
 }
-
-
 
 .chart-wrapper {
 
@@ -1102,8 +962,6 @@ html, body {
 
 }
 
-
-
 /* =============================
 
    CALENDAR SECTION
@@ -1118,8 +976,6 @@ html, body {
 
 }
 
-
-
 .calendar-nav {
 
   display: flex;
@@ -1129,8 +985,6 @@ html, body {
   justify-content: space-between;
 
 }
-
-
 
 .calendar-nav-btn {
 
@@ -1160,8 +1014,6 @@ html, body {
 
 }
 
-
-
 .calendar-nav-btn:hover {
 
   color: var(--text-primary);
@@ -1169,8 +1021,6 @@ html, body {
   border-color: var(--text-secondary);
 
 }
-
-
 
 .calendar-month-label {
 
@@ -1186,15 +1036,11 @@ html, body {
 
 }
 
-
-
 .calendar-grid {
 
   margin-top: 8px;
 
 }
-
-
 
 .calendar-weekdays {
 
@@ -1205,8 +1051,6 @@ html, body {
   margin-bottom: 4px;
 
 }
-
-
 
 .calendar-weekday {
 
@@ -1224,8 +1068,6 @@ html, body {
 
 }
 
-
-
 .calendar-days {
 
   display: grid;
@@ -1235,8 +1077,6 @@ html, body {
   gap: 3px;
 
 }
-
-
 
 .calendar-day {
 
@@ -1266,8 +1106,6 @@ html, body {
 
 }
 
-
-
 .calendar-day.empty {
 
   background: transparent;
@@ -1278,15 +1116,11 @@ html, body {
 
 }
 
-
-
 .calendar-day.today {
 
   border-color: var(--gold);
 
 }
-
-
 
 .calendar-day:not(.empty):hover {
 
@@ -1296,15 +1130,11 @@ html, body {
 
 }
 
-
-
 .calendar-day.has-trades:not(.empty):hover {
 
   border-color: var(--neutral);
 
 }
-
-
 
 .calendar-day-num {
 
@@ -1320,8 +1150,6 @@ html, body {
 
 }
 
-
-
 .calendar-day.today .calendar-day-num {
 
   color: var(--gold);
@@ -1329,8 +1157,6 @@ html, body {
   font-weight: 700;
 
 }
-
-
 
 .calendar-day-pnl {
 
@@ -1346,8 +1172,6 @@ html, body {
 
 }
 
-
-
 .calendar-day-dot {
 
   width: 4px;
@@ -1360,8 +1184,6 @@ html, body {
 
 }
 
-
-
 /* =============================
 
    HOLDINGS PAGE
@@ -1373,8 +1195,6 @@ html, body {
   padding: 12px 16px 16px;
 
 }
-
-
 
 .holdings-summary {
 
@@ -1396,8 +1216,6 @@ html, body {
 
 }
 
-
-
 .holdings-summary-left .label {
 
   font-size: 10px;
@@ -1411,8 +1229,6 @@ html, body {
   text-transform: uppercase;
 
 }
-
-
 
 .holdings-summary-left .value {
 
@@ -1428,15 +1244,11 @@ html, body {
 
 }
 
-
-
 .holdings-summary-right {
 
   text-align: right;
 
 }
-
-
 
 .holdings-summary-right .cost-label {
 
@@ -1450,8 +1262,6 @@ html, body {
 
 }
 
-
-
 .holdings-summary-right .cost-value {
 
   font-family: var(--font-mono);
@@ -1462,8 +1272,6 @@ html, body {
 
 }
 
-
-
 .holdings-list {
 
   display: flex;
@@ -1473,8 +1281,6 @@ html, body {
   gap: 8px;
 
 }
-
-
 
 .holding-card {
 
@@ -1494,8 +1300,6 @@ html, body {
 
 }
 
-
-
 .holding-card:hover {
 
   border-color: var(--border);
@@ -1503,8 +1307,6 @@ html, body {
   background: var(--bg-elevated);
 
 }
-
-
 
 .holding-card-top {
 
@@ -1518,8 +1320,6 @@ html, body {
 
 }
 
-
-
 .holding-symbol {
 
   font-family: var(--font-mono);
@@ -1532,8 +1332,6 @@ html, body {
 
 }
 
-
-
 .holding-name {
 
   font-size: 11px;
@@ -1543,8 +1341,6 @@ html, body {
   margin-top: 1px;
 
 }
-
-
 
 .holding-pnl-val {
 
@@ -1558,8 +1354,6 @@ html, body {
 
 }
 
-
-
 .holding-pnl-pct {
 
   font-family: var(--font-mono);
@@ -1571,8 +1365,6 @@ html, body {
   margin-top: 1px;
 
 }
-
-
 
 .holding-card-bottom {
 
@@ -1586,8 +1378,6 @@ html, body {
 
 }
 
-
-
 .holding-meta {
 
   flex: 1;
@@ -1600,15 +1390,11 @@ html, body {
 
 }
 
-
-
 .holding-meta + .holding-meta {
 
   border-left: 1px solid var(--border-soft);
 
 }
-
-
 
 .holding-meta-label {
 
@@ -1624,8 +1410,6 @@ html, body {
 
 }
 
-
-
 .holding-meta-value {
 
   font-family: var(--font-mono);
@@ -1640,8 +1424,6 @@ html, body {
 
 }
 
-
-
 .holding-actions {
 
   display: flex;
@@ -1651,8 +1433,6 @@ html, body {
   margin-top: 10px;
 
 }
-
-
 
 .btn-sm {
 
@@ -1678,8 +1458,6 @@ html, body {
 
 }
 
-
-
 .btn-edit {
 
   background: transparent;
@@ -1690,8 +1468,6 @@ html, body {
 
 }
 
-
-
 .btn-edit:hover {
 
   border-color: var(--neutral);
@@ -1699,8 +1475,6 @@ html, body {
   color: var(--neutral);
 
 }
-
-
 
 .btn-delete {
 
@@ -1712,8 +1486,6 @@ html, body {
 
 }
 
-
-
 .btn-delete:hover {
 
   border-color: var(--loss);
@@ -1721,8 +1493,6 @@ html, body {
   color: var(--loss);
 
 }
-
-
 
 .btn-add-holding {
 
@@ -1752,8 +1522,6 @@ html, body {
 
 }
 
-
-
 .btn-add-holding:hover {
 
   border-color: var(--gold);
@@ -1763,8 +1531,6 @@ html, body {
   background: var(--gold-soft);
 
 }
-
-
 
 /* =============================
 
@@ -1798,8 +1564,6 @@ html, body {
 
 }
 
-
-
 .modal-overlay.open {
 
   opacity: 1;
@@ -1807,8 +1571,6 @@ html, body {
   pointer-events: all;
 
 }
-
-
 
 .modal-sheet {
 
@@ -1836,15 +1598,11 @@ html, body {
 
 }
 
-
-
 .modal-overlay.open .modal-sheet {
 
   transform: translateY(0);
 
 }
-
-
 
 .modal-handle {
 
@@ -1862,8 +1620,6 @@ html, body {
 
 }
 
-
-
 .modal-header {
 
   padding: 12px 16px 0;
@@ -1878,8 +1634,6 @@ html, body {
 
 }
 
-
-
 .modal-title {
 
   font-family: var(--font-mono);
@@ -1893,8 +1647,6 @@ html, body {
   color: var(--text-primary);
 
 }
-
-
 
 .modal-close {
 
@@ -1926,8 +1678,6 @@ html, body {
 
 }
 
-
-
 .modal-close:hover {
 
   color: var(--text-primary);
@@ -1935,8 +1685,6 @@ html, body {
   border-color: var(--text-secondary);
 
 }
-
-
 
 .modal-body {
 
@@ -1947,8 +1695,6 @@ html, body {
   padding: 12px 16px 24px;
 
 }
-
-
 
 /* =============================
 
@@ -1974,8 +1720,6 @@ html, body {
 
 }
 
-
-
 .trade-list {
 
   display: flex;
@@ -1985,8 +1729,6 @@ html, body {
   gap: 12px;
 
 }
-
-
 
 .trade-card {
 
@@ -1999,8 +1741,6 @@ html, body {
   overflow: hidden;
 
 }
-
-
 
 .trade-card-header {
 
@@ -2016,8 +1756,6 @@ html, body {
 
 }
 
-
-
 .trade-stock-info {
 
   display: flex;
@@ -2027,8 +1765,6 @@ html, body {
   gap: 8px;
 
 }
-
-
 
 .trade-type-badge {
 
@@ -2048,15 +1784,11 @@ html, body {
 
 }
 
-
-
 .type-buy  { background: var(--neutral-soft); color: var(--neutral); }
 
 .type-sell { background: var(--gain-soft);    color: var(--gain); }
 
 .type-daytrade { background: var(--gold-soft); color: var(--gold); }
-
-
 
 .trade-symbol {
 
@@ -2070,8 +1802,6 @@ html, body {
 
 }
 
-
-
 .trade-name {
 
   font-size: 11px;
@@ -2079,8 +1809,6 @@ html, body {
   color: var(--text-secondary);
 
 }
-
-
 
 .trade-roi {
 
@@ -2092,15 +1820,11 @@ html, body {
 
 }
 
-
-
 .trade-card-body {
 
   padding: 10px 12px;
 
 }
-
-
 
 .trade-meta-row {
 
@@ -2112,8 +1836,6 @@ html, body {
 
 }
 
-
-
 .trade-meta-item {
 
   display: flex;
@@ -2123,8 +1845,6 @@ html, body {
   gap: 2px;
 
 }
-
-
 
 .trade-meta-label {
 
@@ -2140,8 +1860,6 @@ html, body {
 
 }
 
-
-
 .trade-meta-value {
 
   font-family: var(--font-mono);
@@ -2153,8 +1871,6 @@ html, body {
   color: var(--text-primary);
 
 }
-
-
 
 .trade-reason-block {
 
@@ -2176,8 +1892,6 @@ html, body {
 
 }
 
-
-
 /* AI Analysis Block */
 
 .ai-block {
@@ -2194,8 +1908,6 @@ html, body {
 
 }
 
-
-
 .ai-block-header {
 
   display: flex;
@@ -2207,8 +1919,6 @@ html, body {
   margin-bottom: 8px;
 
 }
-
-
 
 .ai-label {
 
@@ -2226,8 +1936,6 @@ html, body {
 
 }
 
-
-
 .ai-confidence {
 
   font-family: var(--font-mono);
@@ -2239,8 +1947,6 @@ html, body {
   margin-left: auto;
 
 }
-
-
 
 .ai-comment {
 
@@ -2254,8 +1960,6 @@ html, body {
 
 }
 
-
-
 .ai-tags {
 
   display: flex;
@@ -2267,8 +1971,6 @@ html, body {
   margin-bottom: 8px;
 
 }
-
-
 
 .tag {
 
@@ -2284,8 +1986,6 @@ html, body {
 
 }
 
-
-
 .tag-behavior { background: var(--tag-bg); color: var(--tag-text); border-color: rgba(121,192,255,0.2); }
 
 .tag-timing-ok  { background: var(--gain-soft);    color: var(--gain);    border-color: rgba(150,68,68,0.2); }
@@ -2293,8 +1993,6 @@ html, body {
 .tag-timing-bad { background: var(--loss-soft);    color: var(--loss);    border-color: rgba(107,133,93,0.2); }
 
 .tag-supplement { background: var(--gold-soft);    color: var(--gold);    border-color: rgba(212,168,67,0.2); }
-
-
 
 /* Score Row */
 
@@ -2314,8 +2012,6 @@ html, body {
 
 }
 
-
-
 .score-item {
 
   flex: 1;
@@ -2329,8 +2025,6 @@ html, body {
   gap: 2px;
 
 }
-
-
 
 .score-label {
 
@@ -2346,8 +2040,6 @@ html, body {
 
 }
 
-
-
 .score-value {
 
   font-family: var(--font-mono);
@@ -2358,8 +2050,6 @@ html, body {
 
 }
 
-
-
 .score-divider {
 
   width: 1px;
@@ -2369,8 +2059,6 @@ html, body {
   background: rgba(149,173,219,0.1);
 
 }
-
-
 
 .score-total {
 
@@ -2383,8 +2071,6 @@ html, body {
   gap: 2px;
 
 }
-
-
 
 .score-total-label {
 
@@ -2400,8 +2086,6 @@ html, body {
 
 }
 
-
-
 .score-total-value {
 
   font-family: var(--font-mono);
@@ -2414,11 +2098,7 @@ html, body {
 
 }
 
-
-
 /* star CSS removed — score system replaced by performance metrics // UPDATED */
-
-
 
 /* Deep Analysis Button */
 
@@ -2454,15 +2134,11 @@ html, body {
 
 }
 
-
-
 .btn-deep-analysis:hover {
 
   background: var(--neutral-soft);
 
 }
-
-
 
 /* =============================
 
@@ -2494,8 +2170,6 @@ html, body {
 
 }
 
-
-
 .form-section-title::after {
 
   content: '';
@@ -2508,8 +2182,6 @@ html, body {
 
 }
 
-
-
 .form-row {
 
   display: flex;
@@ -2519,8 +2191,6 @@ html, body {
   margin-bottom: 8px;
 
 }
-
-
 
 .form-group {
 
@@ -2534,11 +2204,7 @@ html, body {
 
 }
 
-
-
 .form-group.full { flex: none; width: 100%; }
-
-
 
 .form-label {
 
@@ -2553,8 +2219,6 @@ html, body {
   text-transform: uppercase;
 
 }
-
-
 
 .form-control {
 
@@ -2582,8 +2246,6 @@ html, body {
 
 }
 
-
-
 .form-control:focus {
 
   border-color: var(--neutral);
@@ -2592,23 +2254,17 @@ html, body {
 
 }
 
-
-
 .form-control::placeholder {
 
   color: var(--text-muted);
 
 }
 
-
-
 select.form-control {
 
   cursor: pointer;
 
 }
-
-
 
 textarea.form-control {
 
@@ -2624,8 +2280,6 @@ textarea.form-control {
 
 }
 
-
-
 .type-selector {
 
   display: flex;
@@ -2635,8 +2289,6 @@ textarea.form-control {
   margin-bottom: 8px;
 
 }
-
-
 
 .type-btn {
 
@@ -2668,15 +2320,11 @@ textarea.form-control {
 
 }
 
-
-
 .type-btn.selected-buy { background: var(--neutral-soft); border-color: var(--neutral); color: var(--neutral); }
 
 .type-btn.selected-sell { background: var(--gain-soft); border-color: var(--gain); color: var(--gain); }
 
 .type-btn.selected-daytrade { background: var(--gold-soft); border-color: var(--gold); color: var(--gold); }
-
-
 
 .btn-submit {
 
@@ -2710,13 +2358,9 @@ textarea.form-control {
 
 }
 
-
-
 .btn-submit:hover { opacity: 0.9; }
 
 .btn-submit:active { transform: scale(0.98); }
-
-
 
 /* =============================
 
@@ -2734,8 +2378,6 @@ textarea.form-control {
 
 }
 
-
-
 .analysis-section {
 
   background: var(--bg-elevated);
@@ -2747,8 +2389,6 @@ textarea.form-control {
   padding: 12px;
 
 }
-
-
 
 .analysis-section-title {
 
@@ -2768,8 +2408,6 @@ textarea.form-control {
 
 }
 
-
-
 .score-bar {
 
   display: flex;
@@ -2781,8 +2419,6 @@ textarea.form-control {
   margin-bottom: 6px;
 
 }
-
-
 
 .score-bar-label {
 
@@ -2798,8 +2434,6 @@ textarea.form-control {
 
 }
 
-
-
 .score-bar-track {
 
   flex: 1;
@@ -2814,8 +2448,6 @@ textarea.form-control {
 
 }
 
-
-
 .score-bar-fill {
 
   height: 100%;
@@ -2825,8 +2457,6 @@ textarea.form-control {
   transition: width 0.5s ease;
 
 }
-
-
 
 .score-bar-num {
 
@@ -2846,8 +2476,6 @@ textarea.form-control {
 
 }
 
-
-
 .behavior-history {
 
   display: flex;
@@ -2858,8 +2486,6 @@ textarea.form-control {
 
 }
 
-
-
 .behavior-row {
 
   display: flex;
@@ -2869,8 +2495,6 @@ textarea.form-control {
   gap: 8px;
 
 }
-
-
 
 .behavior-tag-name {
 
@@ -2888,8 +2512,6 @@ textarea.form-control {
 
 }
 
-
-
 .behavior-bar-track {
 
   flex: 1;
@@ -2904,8 +2526,6 @@ textarea.form-control {
 
 }
 
-
-
 .behavior-bar-fill {
 
   height: 100%;
@@ -2915,8 +2535,6 @@ textarea.form-control {
   border-radius: 2px;
 
 }
-
-
 
 .behavior-count {
 
@@ -2931,8 +2549,6 @@ textarea.form-control {
   text-align: right;
 
 }
-
-
 
 /* =============================
 
@@ -2949,8 +2565,6 @@ textarea.form-control {
   margin: -12px -16px 12px;
 
 }
-
-
 
 /* =============================
 
@@ -2992,11 +2606,7 @@ textarea.form-control {
 
 }
 
-
-
 #toast.show { transform: translateX(-50%) translateY(0); }
-
-
 
 /* =============================
 
@@ -3014,8 +2624,6 @@ textarea.form-control {
 
 }
 
-
-
 .empty-state-icon {
 
   font-size: 32px;
@@ -3024,8 +2632,6 @@ textarea.form-control {
 
 }
 
-
-
 .empty-state-text {
 
   font-size: 13px;
@@ -3033,8 +2639,6 @@ textarea.form-control {
   line-height: 1.6;
 
 }
-
-
 
 /* =============================
 
@@ -3051,8 +2655,6 @@ textarea.form-control {
   margin: 12px 0;
 
 }
-
-
 
 .chip {
 
@@ -3078,15 +2680,11 @@ textarea.form-control {
 
 }
 
-
-
 .chip-buy { background: var(--neutral-soft); color: var(--neutral); }
 
 .chip-sell { background: var(--gain-soft); color: var(--gain); }
 
 .chip-daytrade { background: var(--gold-soft); color: var(--gold); }
-
-
 
 /* Scroll snap for page */
 
@@ -3096,8 +2694,6 @@ textarea.form-control {
 
 }
 
-
-
 /* =============================
 
    CHART RANGE ROW
@@ -3105,8 +2701,6 @@ textarea.form-control {
 ============================= */
 
 /* chart-range-row deprecated, replaced by chart-range-panel */
-
-
 
 .chart-range-panel-inner {
 
@@ -3124,8 +2718,6 @@ textarea.form-control {
 
 }
 
-
-
 .chart-range-presets {
 
   display: flex;
@@ -3135,8 +2727,6 @@ textarea.form-control {
   flex-shrink: 0;
 
 }
-
-
 
 .chart-range-btn {
 
@@ -3166,8 +2756,6 @@ textarea.form-control {
 
 }
 
-
-
 .chart-range-btn.active {
 
   background: rgba(150,68,68,0.12);
@@ -3177,8 +2765,6 @@ textarea.form-control {
   color: #964444;
 
 }
-
-
 
 .chart-range-divider {
 
@@ -3192,8 +2778,6 @@ textarea.form-control {
 
 }
 
-
-
 .chart-custom-range {
 
   display: flex;
@@ -3205,8 +2789,6 @@ textarea.form-control {
   flex-shrink: 0;
 
 }
-
-
 
 .chart-date-input {
 
@@ -3242,8 +2824,6 @@ textarea.form-control {
 
 }
 
-
-
 .chart-date-input:focus {
 
   border-color: var(--neutral);
@@ -3251,8 +2831,6 @@ textarea.form-control {
   color: var(--text-primary);
 
 }
-
-
 
 .chart-date-sep {
 
@@ -3265,8 +2843,6 @@ textarea.form-control {
   flex-shrink: 0;
 
 }
-
-
 
 /* =============================
 
@@ -3292,8 +2868,6 @@ textarea.form-control {
 
 }
 
-
-
 .calendar-month-btn::after {
 
   content: ' ▾';
@@ -3306,8 +2880,6 @@ textarea.form-control {
 
 }
 
-
-
 .calendar-month-btn:hover {
 
   border-color: var(--border);
@@ -3315,8 +2887,6 @@ textarea.form-control {
   background: var(--bg-elevated);
 
 }
-
-
 
 .month-picker-overlay {
 
@@ -3346,8 +2916,6 @@ textarea.form-control {
 
 }
 
-
-
 .month-picker-overlay.open {
 
   opacity: 1;
@@ -3355,8 +2923,6 @@ textarea.form-control {
   pointer-events: all;
 
 }
-
-
 
 .month-picker-panel {
 
@@ -3378,15 +2944,11 @@ textarea.form-control {
 
 }
 
-
-
 .month-picker-overlay.open .month-picker-panel {
 
   transform: translateY(0);
 
 }
-
-
 
 .month-picker-header {
 
@@ -3400,8 +2962,6 @@ textarea.form-control {
 
 }
 
-
-
 .month-picker-yr {
 
   font-family: var(--font-mono);
@@ -3413,8 +2973,6 @@ textarea.form-control {
   color: var(--text-primary);
 
 }
-
-
 
 .month-picker-yr-btn {
 
@@ -3444,8 +3002,6 @@ textarea.form-control {
 
 }
 
-
-
 .month-picker-yr-btn:hover {
 
   color: var(--text-primary);
@@ -3453,8 +3009,6 @@ textarea.form-control {
   border-color: var(--text-secondary);
 
 }
-
-
 
 .month-picker-grid {
 
@@ -3465,8 +3019,6 @@ textarea.form-control {
   gap: 6px;
 
 }
-
-
 
 .month-picker-cell {
 
@@ -3492,8 +3044,6 @@ textarea.form-control {
 
 }
 
-
-
 .month-picker-cell:hover {
 
   background: var(--bg-hover);
@@ -3504,8 +3054,6 @@ textarea.form-control {
 
 }
 
-
-
 .month-picker-cell.current {
 
   border-color: var(--gold);
@@ -3513,8 +3061,6 @@ textarea.form-control {
   color: var(--gold);
 
 }
-
-
 
 .month-picker-cell.selected {
 
@@ -3527,8 +3073,6 @@ textarea.form-control {
   font-weight: 700;
 
 }
-
-
 
 .month-picker-cell.has-data::after {
 
@@ -3545,8 +3089,6 @@ textarea.form-control {
   margin-top: 2px;
 
 }
-
-
 
 /* =============================
 
@@ -3574,8 +3116,6 @@ textarea.form-control {
 
 }
 
-
-
 .screenshot-parse-area:hover,
 
 .screenshot-parse-area.drag-over {
@@ -3586,11 +3126,7 @@ textarea.form-control {
 
 }
 
-
-
 .screenshot-parse-icon { font-size: 22px; margin-bottom: 4px; }
-
-
 
 .screenshot-parse-text {
 
@@ -3602,8 +3138,6 @@ textarea.form-control {
 
 }
 
-
-
 .screenshot-parse-text span {
 
   font-size: 10px;
@@ -3613,8 +3147,6 @@ textarea.form-control {
   font-family: var(--font-mono);
 
 }
-
-
 
 .screenshot-parse-status {
 
@@ -3636,15 +3168,11 @@ textarea.form-control {
 
 }
 
-
-
 .parse-loading { background: var(--neutral-soft); color: var(--neutral); border: 1px solid rgba(149,173,219,0.2); }
 
 .parse-success { background: var(--gain-soft); color: var(--gain); border: 1px solid rgba(150,68,68,0.2); }
 
 .parse-error   { background: var(--loss-soft); color: var(--loss); border: 1px solid rgba(107,133,93,0.2); }
-
-
 
 /* Spinner */
 
@@ -3666,8 +3194,6 @@ textarea.form-control {
 
 }
 
-
-
 /* chart header right cluster */
 
 .chart-header-right {
@@ -3679,8 +3205,6 @@ textarea.form-control {
   gap: 6px;
 
 }
-
-
 
 /* 時間範圍下拉按鈕 */
 
@@ -3718,8 +3242,6 @@ textarea.form-control {
 
 }
 
-
-
 .chart-range-toggle:hover,
 
 .chart-range-toggle.open {
@@ -3732,8 +3254,6 @@ textarea.form-control {
 
 }
 
-
-
 .chart-range-chevron {
 
   font-size: 8px;
@@ -3744,15 +3264,11 @@ textarea.form-control {
 
 }
 
-
-
 .chart-range-toggle.open .chart-range-chevron {
 
   transform: rotate(180deg);
 
 }
-
-
 
 /* 時間範圍面板 */
 
@@ -3770,8 +3286,6 @@ textarea.form-control {
 
 }
 
-
-
 .chart-range-panel.open {
 
   max-height: 48px;
@@ -3781,8 +3295,6 @@ textarea.form-control {
   margin-bottom: 6px;
 
 }
-
-
 
 /* =============================
 
@@ -3810,8 +3322,6 @@ textarea.form-control {
 
 .loss-badge { background: rgba(107,133,93,0.15); color: #6b855d; border: 1px solid rgba(107,133,93,0.3); }
 
-
-
 /* =============================
 
    HOLDINGS VIEW TOGGLE
@@ -3827,8 +3337,6 @@ textarea.form-control {
   margin: 10px 0 12px;
 
 }
-
-
 
 .hv-btn {
 
@@ -3858,8 +3366,6 @@ textarea.form-control {
 
 }
 
-
-
 .hv-btn.active {
 
   background: rgba(180,160,140,0.12);
@@ -3869,8 +3375,6 @@ textarea.form-control {
   color: #c8b49a;
 
 }
-
-
 
 /* ── Donut chart layout ── */
 
@@ -3888,8 +3392,6 @@ textarea.form-control {
 
 }
 
-
-
 .donut-canvas-wrap {
 
   position: relative;
@@ -3902,8 +3404,6 @@ textarea.form-control {
 
 }
 
-
-
 .donut-canvas-wrap canvas {
 
   width: 200px !important;
@@ -3911,8 +3411,6 @@ textarea.form-control {
   height: 200px !important;
 
 }
-
-
 
 .donut-center-label {
 
@@ -3938,8 +3436,6 @@ textarea.form-control {
 
 }
 
-
-
 /* ── Legend ── */
 
 .donut-legend {
@@ -3953,8 +3449,6 @@ textarea.form-control {
   gap: 8px;
 
 }
-
-
 
 .legend-row {
 
@@ -3976,11 +3470,7 @@ textarea.form-control {
 
 }
 
-
-
 .legend-row:hover { background: var(--bg-elevated); }
-
-
 
 .legend-dot {
 
@@ -3994,8 +3484,6 @@ textarea.form-control {
 
 }
 
-
-
 .legend-name {
 
   flex: 1;
@@ -4005,8 +3493,6 @@ textarea.form-control {
   color: var(--text-primary);
 
 }
-
-
 
 .legend-symbol {
 
@@ -4019,8 +3505,6 @@ textarea.form-control {
   flex-shrink: 0;
 
 }
-
-
 
 .legend-pct {
 
@@ -4040,8 +3524,6 @@ textarea.form-control {
 
 }
 
-
-
 .legend-val {
 
   font-family: var(--font-mono);
@@ -4057,8 +3539,6 @@ textarea.form-control {
   text-align: right;
 
 }
-
-
 
 /* =============================
 
@@ -4078,8 +3558,6 @@ textarea.form-control {
 
 }
 
-
-
 .tx-filter-row {
 
   display: flex;
@@ -4090,8 +3568,6 @@ textarea.form-control {
 
 }
 
-
-
 .tx-type-filter {
 
   display: flex;
@@ -4099,8 +3575,6 @@ textarea.form-control {
   gap: 5px;
 
 }
-
-
 
 .tx-type-btn {
 
@@ -4132,8 +3606,6 @@ textarea.form-control {
 
 }
 
-
-
 .tx-type-btn.active {
 
   background: var(--neutral-soft);
@@ -4143,8 +3615,6 @@ textarea.form-control {
   color: var(--neutral);
 
 }
-
-
 
 /* Row item */
 
@@ -4162,11 +3632,7 @@ textarea.form-control {
 
 }
 
-
-
 .tx-row:last-child { border-bottom: none; }
-
-
 
 .tx-row-left {
 
@@ -4175,8 +3641,6 @@ textarea.form-control {
   min-width: 0;
 
 }
-
-
 
 .tx-row-symbol {
 
@@ -4190,8 +3654,6 @@ textarea.form-control {
 
 }
 
-
-
 .tx-row-name {
 
   font-size: 11px;
@@ -4201,8 +3663,6 @@ textarea.form-control {
   margin-top: 1px;
 
 }
-
-
 
 .tx-row-mid {
 
@@ -4218,8 +3678,6 @@ textarea.form-control {
 
 }
 
-
-
 .tx-row-qty {
 
   font-family: var(--font-mono);
@@ -4230,8 +3688,6 @@ textarea.form-control {
 
 }
 
-
-
 .tx-row-price {
 
   font-family: var(--font-mono);
@@ -4241,8 +3697,6 @@ textarea.form-control {
   color: var(--text-muted);
 
 }
-
-
 
 .tx-row-right {
 
@@ -4258,8 +3712,6 @@ textarea.form-control {
 
 }
 
-
-
 .tx-row-date {
 
   font-family: var(--font-mono);
@@ -4269,8 +3721,6 @@ textarea.form-control {
   color: var(--text-muted);
 
 }
-
-
 
 .tx-row-type-badge {
 
@@ -4289,8 +3739,6 @@ textarea.form-control {
   text-transform: uppercase;
 
 }
-
-
 
 /* =============================
 
@@ -4313,8 +3761,6 @@ textarea.form-control {
   overflow: hidden;
 
 }
-
-
 
 .pairs-range-btn {
 
@@ -4346,8 +3792,6 @@ textarea.form-control {
 
 }
 
-
-
 .pairs-range-btn.active {
 
   background: rgba(150,68,68,0.12);
@@ -4357,8 +3801,6 @@ textarea.form-control {
   color: #964444;
 
 }
-
-
 
 .pairs-summary-strip {
 
@@ -4378,8 +3820,6 @@ textarea.form-control {
 
 }
 
-
-
 .pairs-summary-item {
 
   flex: 1;
@@ -4398,8 +3838,6 @@ textarea.form-control {
 
 }
 
-
-
 .pairs-summary-item + .pairs-summary-item::before {
 
   content: '';
@@ -4413,8 +3851,6 @@ textarea.form-control {
   background: var(--border-soft);
 
 }
-
-
 
 .pairs-summary-label {
 
@@ -4430,8 +3866,6 @@ textarea.form-control {
 
 }
 
-
-
 .pairs-summary-value {
 
   font-family: var(--font-mono);
@@ -4441,8 +3875,6 @@ textarea.form-control {
   font-weight: 700;
 
 }
-
-
 
 /* Pair row — like screenshot layout */
 
@@ -4460,11 +3892,7 @@ textarea.form-control {
 
 }
 
-
-
 .pair-row:last-child { border-bottom: none; }
-
-
 
 .pair-row-left {
 
@@ -4473,8 +3901,6 @@ textarea.form-control {
   min-width: 0;
 
 }
-
-
 
 .pair-row-symbol {
 
@@ -4488,8 +3914,6 @@ textarea.form-control {
 
 }
 
-
-
 .pair-row-name {
 
   font-size: 11px;
@@ -4499,8 +3923,6 @@ textarea.form-control {
   margin-top: 1px;
 
 }
-
-
 
 .pair-row-meta {
 
@@ -4513,8 +3935,6 @@ textarea.form-control {
   margin-top: 3px;
 
 }
-
-
 
 .pair-row-mid {
 
@@ -4530,8 +3950,6 @@ textarea.form-control {
 
 }
 
-
-
 .pair-row-qty {
 
   font-family: var(--font-mono);
@@ -4544,8 +3962,6 @@ textarea.form-control {
 
 }
 
-
-
 .pair-row-price {
 
   font-family: var(--font-mono);
@@ -4557,8 +3973,6 @@ textarea.form-control {
   text-align: right;
 
 }
-
-
 
 .pair-row-right {
 
@@ -4574,8 +3988,6 @@ textarea.form-control {
 
 }
 
-
-
 .pair-row-pnl {
 
   font-family: var(--font-mono);
@@ -4586,8 +3998,6 @@ textarea.form-control {
 
 }
 
-
-
 .pair-row-roi {
 
   font-family: var(--font-mono);
@@ -4597,8 +4007,6 @@ textarea.form-control {
   font-weight: 600;
 
 }
-
-
 
 .pair-row-date {
 
@@ -4612,8 +4020,6 @@ textarea.form-control {
 
 }
 
-
-
 /* =============================
 
    HOLDING CARD — NO PRICE STATE
@@ -4626,8 +4032,6 @@ textarea.form-control {
 
 }
 
-
-
 .holding-card-no-price:hover {
 
   border-color: rgba(212,168,67,0.5) !important;
@@ -4637,8 +4041,6 @@ textarea.form-control {
   cursor: pointer;
 
 }
-
-
 
 .holding-no-price-badge {
 
@@ -4662,8 +4064,6 @@ textarea.form-control {
 
 }
 
-
-
 .btn-edit-urgent {
 
   background: rgba(212,168,67,0.1) !important;
@@ -4673,8 +4073,6 @@ textarea.form-control {
   color: var(--gold) !important;
 
 }
-
-
 
 /* Summary card when no price */
 
@@ -4692,8 +4090,6 @@ textarea.form-control {
 
 }
 
-
-
 /* =============================
 
    OVERVIEW LINE SELECTOR
@@ -4709,8 +4105,6 @@ textarea.form-control {
   gap: 10px;
 
 }
-
-
 
 .overview-line-item {
 
@@ -4736,8 +4130,6 @@ textarea.form-control {
 
 }
 
-
-
 .overview-line-item:hover {
 
   background: var(--bg-hover);
@@ -4746,8 +4138,6 @@ textarea.form-control {
 
 }
 
-
-
 .overview-line-item.selected {
 
   border-color: rgba(196,168,130,0.4);
@@ -4755,8 +4145,6 @@ textarea.form-control {
   background: rgba(196,168,130,0.06);
 
 }
-
-
 
 .ov-check-box {
 
@@ -4780,8 +4168,6 @@ textarea.form-control {
 
 }
 
-
-
 .overview-line-item.selected .ov-check-box {
 
   background: #c4a882;
@@ -4789,8 +4175,6 @@ textarea.form-control {
   border-color: #c4a882;
 
 }
-
-
 
 .ov-check-inner {
 
@@ -4810,15 +4194,11 @@ textarea.form-control {
 
 }
 
-
-
 .overview-line-item.selected .ov-check-inner {
 
   opacity: 1;
 
 }
-
-
 
 .ov-line-swatch {
 
@@ -4832,8 +4212,6 @@ textarea.form-control {
 
 }
 
-
-
 .ov-line-label {
 
   font-size: 14px;
@@ -4843,8 +4221,6 @@ textarea.form-control {
   flex: 1;
 
 }
-
-
 
 /* overview btn active state */
 
@@ -4857,8 +4233,6 @@ textarea.form-control {
   color: #c4a882;
 
 }
-
-
 
 /* ── margin badge ── */
 
@@ -4884,8 +4258,6 @@ textarea.form-control {
 
 }
 
-
-
 /* ── method selector (現股/融資) ── */
 
 .method-selector {
@@ -4899,8 +4271,6 @@ textarea.form-control {
   margin-bottom: 8px;
 
 }
-
-
 
 .method-btn {
 
@@ -4932,13 +4302,9 @@ textarea.form-control {
 
 }
 
-
-
 .method-cash-active   { background: var(--neutral-soft); border-color: var(--neutral); color: var(--neutral); }
 
 .method-margin-active { background: rgba(180,130,80,0.12); border-color: #c8904a; color: #c8904a; }
-
-
 
 /* ── analytics modal ── */
 
@@ -4954,8 +4320,6 @@ textarea.form-control {
 
 }
 
-
-
 .analytics-field-label {
 
   font-family: var(--font-mono);
@@ -4970,8 +4334,6 @@ textarea.form-control {
 
 }
 
-
-
 .analytics-section {
 
   background: var(--bg-elevated);
@@ -4985,8 +4347,6 @@ textarea.form-control {
   margin-bottom: 10px;
 
 }
-
-
 
 .analytics-section-title {
 
@@ -5006,8 +4366,6 @@ textarea.form-control {
 
 }
 
-
-
 .analytics-formula-hint {
 
   font-family: var(--font-mono);
@@ -5022,8 +4380,6 @@ textarea.form-control {
 
 }
 
-
-
 .analytics-result-grid {
 
   display: grid;
@@ -5033,8 +4389,6 @@ textarea.form-control {
   gap: 10px;
 
 }
-
-
 
 .analytics-result-item {
 
@@ -5046,8 +4400,6 @@ textarea.form-control {
 
 }
 
-
-
 .analytics-result-item--wide {
 
   grid-column: 1 / -1;
@@ -5057,8 +4409,6 @@ textarea.form-control {
   border-top: 1px solid var(--border-soft);
 
 }
-
-
 
 .analytics-result-label {
 
@@ -5074,8 +4424,6 @@ textarea.form-control {
 
 }
 
-
-
 .analytics-result-value {
 
   font-family: var(--font-mono);
@@ -5088,8 +4436,6 @@ textarea.form-control {
 
 }
 
-
-
 .analytics-result-value--big {
 
   font-size: 24px;
@@ -5097,8 +4443,6 @@ textarea.form-control {
   letter-spacing: -0.02em;
 
 }
-
-
 
 .analytics-note {
 
@@ -5117,8 +4461,6 @@ textarea.form-control {
   border-left: 2px solid var(--border);
 
 }
-
-
 
 /* =============================
 
@@ -5154,8 +4496,6 @@ textarea.form-control {
 
 }
 
-
-
 /* =============================
 
    PNL MODAL — tabs + list
@@ -5177,8 +4517,6 @@ textarea.form-control {
 }
 
 .pnl-tabs::-webkit-scrollbar { display: none; }
-
-
 
 .pnl-tab {
 
@@ -5208,8 +4546,6 @@ textarea.form-control {
 
 }
 
-
-
 .pnl-tab.active {
 
   background: rgba(150,68,68,0.12);
@@ -5219,8 +4555,6 @@ textarea.form-control {
   color: #964444;
 
 }
-
-
 
 .pnl-custom-range {
 
@@ -5233,8 +4567,6 @@ textarea.form-control {
   margin-bottom: 10px;
 
 }
-
-
 
 /* Summary strip */
 
@@ -5254,8 +4586,6 @@ textarea.form-control {
 
 }
 
-
-
 .pnl-strip-item {
 
   flex: 1;
@@ -5274,8 +4604,6 @@ textarea.form-control {
 
 }
 
-
-
 .pnl-strip-item + .pnl-strip-item::before {
 
   content: '';
@@ -5287,8 +4615,6 @@ textarea.form-control {
   width: 1px; background: var(--border-soft);
 
 }
-
-
 
 .pnl-strip-label {
 
@@ -5304,8 +4630,6 @@ textarea.form-control {
 
 }
 
-
-
 .pnl-strip-value {
 
   font-family: var(--font-mono);
@@ -5315,8 +4639,6 @@ textarea.form-control {
   font-weight: 700;
 
 }
-
-
 
 /* Position row (未實現) */
 
@@ -5333,8 +4655,6 @@ textarea.form-control {
 }
 
 .pnl-pos-row:last-child { border-bottom: none; }
-
-
 
 .pnl-pos-left { flex: 1; min-width: 0; }
 
@@ -5354,8 +4674,6 @@ textarea.form-control {
 
 .pnl-pos-meta  { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); margin-top: 3px; }
 
-
-
 .pnl-pos-mid {
 
   display: flex; flex-direction: column;
@@ -5365,8 +4683,6 @@ textarea.form-control {
 }
 
 .pnl-pos-mid-val { font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); }
-
-
 
 .pnl-pos-right {
 
@@ -5381,8 +4697,6 @@ textarea.form-control {
 .pnl-pos-roi { font-family: var(--font-mono); font-size: 12px; font-weight: 600; }
 
 .pnl-pos-date { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); margin-top: 2px; }
-
-
 
 /* =============================
 
@@ -5402,8 +4716,6 @@ textarea.form-control {
 
 }
 
-
-
 .pnl-donut-wrap {
 
   position: relative;
@@ -5416,8 +4728,6 @@ textarea.form-control {
 
 }
 
-
-
 .pnl-donut-wrap canvas {
 
   width: 150px !important;
@@ -5425,8 +4735,6 @@ textarea.form-control {
   height: 150px !important;
 
 }
-
-
 
 .pnl-donut-center {
 
@@ -5452,8 +4760,6 @@ textarea.form-control {
 
 }
 
-
-
 .pnl-pie-legend {
 
   flex: 1;
@@ -5465,8 +4771,6 @@ textarea.form-control {
   gap: 0;
 
 }
-
-
 
 .pnl-pie-legend-row {
 
@@ -5480,8 +4784,6 @@ textarea.form-control {
 
 }
 
-
-
 .pnl-pie-divider {
 
   height: 1px;
@@ -5489,8 +4791,6 @@ textarea.form-control {
   background: var(--border-soft);
 
 }
-
-
 
 .pnl-pie-legend-dot {
 
@@ -5506,13 +4806,9 @@ textarea.form-control {
 
 }
 
-
-
 .gain-dot  { background: #964444; }
 
 .loss-dot  { background: #6b855d; }
-
-
 
 .pnl-pie-legend-label {
 
@@ -5524,8 +4820,6 @@ textarea.form-control {
 
 }
 
-
-
 .pnl-pie-legend-label span {
 
   font-family: var(--font-mono);
@@ -5535,8 +4829,6 @@ textarea.form-control {
   color: var(--text-primary);
 
 }
-
-
 
 .pnl-pie-legend-amount {
 
@@ -5548,13 +4840,9 @@ textarea.form-control {
 
 }
 
-
-
 .gain-amount { color: #964444; }
 
 .loss-amount { color: #6b855d; }
-
-
 
 .pnl-pie-caption {
 
@@ -5568,8 +4856,6 @@ textarea.form-control {
 
 }
 
-
-
 .pnl-divider-line {
 
   height: 1px;
@@ -5579,8 +4865,6 @@ textarea.form-control {
   margin-bottom: 12px;
 
 }
-
-
 
 /* =============================
 
@@ -5598,8 +4882,6 @@ textarea.form-control {
 
 }
 
-
-
 .strategy-card {
 
   background: var(--bg-card);
@@ -5616,8 +4898,6 @@ textarea.form-control {
 
 }
 
-
-
 .strategy-card:hover {
 
   background: var(--bg-hover);
@@ -5625,8 +4905,6 @@ textarea.form-control {
   border-color: var(--border);
 
 }
-
-
 
 .strategy-card-name {
 
@@ -5642,8 +4920,6 @@ textarea.form-control {
 
 }
 
-
-
 .strategy-card-winrate-row {
 
   display: flex;
@@ -5657,8 +4933,6 @@ textarea.form-control {
   flex-wrap: nowrap;
 
 }
-
-
 
 .strategy-card-main {
 
@@ -5676,8 +4950,6 @@ textarea.form-control {
 
 }
 
-
-
 .strategy-card-sub-label {
 
   font-family: var(--font-mono);
@@ -5694,8 +4966,6 @@ textarea.form-control {
 
 }
 
-
-
 .strategy-card-divider {
 
   height: 1px;
@@ -5705,8 +4975,6 @@ textarea.form-control {
   margin-bottom: 7px;
 
 }
-
-
 
 .strategy-card-row {
 
@@ -5719,8 +4987,6 @@ textarea.form-control {
   margin-bottom: 3px;
 
 }
-
-
 
 .strategy-card-key {
 
@@ -5736,8 +5002,6 @@ textarea.form-control {
 
 }
 
-
-
 .strategy-card-val {
 
   font-family: var(--font-mono);
@@ -5749,7 +5013,6 @@ textarea.form-control {
   color: var(--text-secondary);
 
 }
-
 
 /* =============================
    CLOUD SYNC & LIVE QUOTES
@@ -6020,8 +5283,6 @@ textarea.form-control {
 
 <body>
 
-
-
 <!-- =====================
 
      HEADER
@@ -6058,13 +5319,12 @@ textarea.form-control {
 
     <button class="btn-tab-switch" id="tab-holdings" onclick="switchPage('holdings')">持股</button>
 
+    <button class="btn-cloud" id="btn-cloud" onclick="openCloudModal()" title="雲端備份與即時股價設定" style="position:relative">☁<span id="cloud-badge-dot" style="position:absolute;top:2px;right:2px;width:6px;height:6px;border-radius:50%;background:#4caf50;"></span></button>
     <button class="btn-add" onclick="openAddTradeModal()" title="新增交易">+</button>
 
   </div>
 
 </header>
-
-
 
 <!-- =====================
 
@@ -6074,13 +5334,9 @@ textarea.form-control {
 
 <div id="main-content">
 
-
-
   <!-- PNL PAGE -->
 
   <div class="page active" id="page-pnl">
-
-
 
     <!-- Summary Cards -->
 
@@ -6120,8 +5376,6 @@ textarea.form-control {
 
     </div>
 
-
-
     <!-- UPDATED: Performance Stats Accordion -->
 
     <div class="stats-accordion" id="stats-accordion">
@@ -6159,8 +5413,6 @@ textarea.form-control {
       <div class="stats-detail-panel">
 
         <div class="stats-detail-inner">
-
-
 
           <!-- Strategy breakdown: horizontal scroll cards -->
 
@@ -6276,8 +5528,6 @@ textarea.form-control {
 
           </div>
 
-
-
           <!-- Behavior performance -->
 
           <div>
@@ -6287,8 +5537,6 @@ textarea.form-control {
             <div id="stats-behavior-bars"></div>
 
           </div>
-
-
 
           <!-- Streak & Drawdown -->
 
@@ -6332,15 +5580,11 @@ textarea.form-control {
 
           </div>
 
-
-
         </div>
 
       </div>
 
     </div>
-
-
 
     <!-- Chart Section -->
 
@@ -6416,8 +5660,6 @@ textarea.form-control {
 
     </div>
 
-
-
     <!-- Calendar Section -->
 
     <div class="calendar-section">
@@ -6486,19 +5728,13 @@ textarea.form-control {
 
     </div>
 
-
-
   </div><!-- /page-pnl -->
-
-
 
   <!-- HOLDINGS PAGE -->
 
   <div class="page" id="page-holdings">
 
     <div class="holdings-section">
-
-
 
       <!-- Summary bar -->
 
@@ -6512,7 +5748,8 @@ textarea.form-control {
 
         </div>
 
-        <div class="holdings-summary-right">
+        <div class="holdings-summary-right" style="display:flex;align-items:center;gap:8px">
+          <button onclick="fetchLiveStockPrices(false)" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-secondary);font-size:10px;padding:3px 7px;cursor:pointer" title="更新即時盤中現價">⚡ 報價</button>
 
           <div class="cost-label">成本</div>
 
@@ -6521,8 +5758,6 @@ textarea.form-control {
         </div>
 
       </div>
-
-
 
       <!-- View mode toggle -->
 
@@ -6536,8 +5771,6 @@ textarea.form-control {
 
       </div>
 
-
-
       <!-- List view -->
 
       <div id="holdings-view-list">
@@ -6545,8 +5778,6 @@ textarea.form-control {
         <div class="holdings-list" id="holdings-list"></div>
 
       </div>
-
-
 
       <!-- Chart view -->
 
@@ -6567,8 +5798,6 @@ textarea.form-control {
         </div>
 
       </div>
-
-
 
       <!-- History view -->
 
@@ -6604,19 +5833,13 @@ textarea.form-control {
 
       </div>
 
-
-
     </div>
 
   </div><!-- /page-holdings -->
 
-
-
 </div><!-- /main-content -->
 
 </div><!-- /app -->
-
-
 
 <!-- =====================
 
@@ -6643,8 +5866,6 @@ textarea.form-control {
   </div>
 
 </div>
-
-
 
 <!-- =====================
 
@@ -6764,8 +5985,6 @@ textarea.form-control {
 
 </div>
 
-
-
 <!-- =====================
 
      MODAL: HOLDING FORM
@@ -6801,8 +6020,6 @@ textarea.form-control {
       </div>
 
       <div id="screenshot-parse-status" style="display:none"></div>
-
-
 
       <div class="form-section-title">股票</div>
 
@@ -6858,8 +6075,6 @@ textarea.form-control {
 
 </div>
 
-
-
 <!-- =====================
 
      MODAL: DEEP ANALYSIS
@@ -6885,10 +6100,6 @@ textarea.form-control {
   </div>
 
 </div>
-
-
-
-
 
 <!-- =====================
 
@@ -6943,8 +6154,6 @@ textarea.form-control {
   </div>
 
 </div>
-
-
 
 <!-- =====================
 
@@ -7026,8 +6235,6 @@ textarea.form-control {
 
 </div>
 
-
-
 <!-- =====================
 
      MODAL: 投資績效分析
@@ -7068,8 +6275,6 @@ textarea.form-control {
 
       </div>
 
-
-
       <!-- 年化報酬率 -->
 
       <div class="analytics-section">
@@ -7107,8 +6312,6 @@ textarea.form-control {
         </div>
 
       </div>
-
-
 
       <!-- 投資周轉率 -->
 
@@ -7148,8 +6351,6 @@ textarea.form-control {
 
       </div>
 
-
-
       <!-- 補充說明 -->
 
       <div class="analytics-note">
@@ -7165,8 +6366,6 @@ textarea.form-control {
   </div>
 
 </div>
-
-
 
 <!-- =====================
 
@@ -7251,8 +6450,6 @@ textarea.form-control {
   </div>
 
 </div>
-
-
 
 <!-- =====================
 
@@ -7364,7 +6561,6 @@ textarea.form-control {
 
 </div>
 
-
 <!-- =====================
      MODAL: 雲端備份與即時股價
 ===================== -->
@@ -7471,8 +6667,6 @@ textarea.form-control {
 
 <div id="toast"></div>
 
-
-
 <script>
 
 /* ============================================================
@@ -7480,8 +6674,6 @@ textarea.form-control {
    DATA LAYER
 
 ============================================================ */
-
-
 
 // ── Single source of truth: transactions + price overrides ──
 
@@ -7576,23 +6768,17 @@ const DB = {
 
 };
 
-
-
 function genId() {
 
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 
 }
 
-
-
 /* ============================================================
 
    POSITION ENGINE — compute open positions from transactions
 
 ============================================================ */
-
-
 
 // Returns [{symbol, name, shares, avgCost}] for all symbols with open shares
 
@@ -7604,21 +6790,15 @@ function buildPositions(transactions) {
 
   const sorted = [...transactions].sort((a, b) => a.date.localeCompare(b.date));
 
-
-
   sorted.forEach(tx => {
 
     const sym = tx.symbol;
 
     if (!queues[sym]) queues[sym] = { lots: [], name: tx.name };
 
-
-
     if (tx.type === 'buy') {
 
       queues[sym].lots.push({ price: tx.price, quantity: tx.quantity });
-
-
 
     } else if (tx.type === 'sell' || tx.type === 'daytrade') {
 
@@ -7647,8 +6827,6 @@ function buildPositions(transactions) {
     }
 
   });
-
-
 
   // Build result: only symbols with remaining open lots
 
@@ -7680,15 +6858,11 @@ function buildPositions(transactions) {
 
 }
 
-
-
 /* ============================================================
 
    AI SIMULATION ENGINE
 
 ============================================================ */
-
-
 
 const BEHAVIOR_TAGS = ['追高', '抄底', '突破交易', '情緒交易', '紀律交易'];
 
@@ -7696,15 +6870,11 @@ const TIMING_OPTIONS = ['過早', '合理', '過晚'];
 
 const SUPPLEMENT_TAGS = ['停損', '長期持有'];
 
-
-
 function simulateAIAnalysis(transaction) {
 
   const { type, reason, price, quantity } = transaction;
 
   const r = reason ? reason.toLowerCase() : '';
-
-
 
   // Heuristic behavior detection
 
@@ -7717,8 +6887,6 @@ function simulateAIAnalysis(transaction) {
   let comment = '';
 
   let supplement = [];
-
-
 
   // Reason-based heuristics
 
@@ -7734,8 +6902,6 @@ function simulateAIAnalysis(transaction) {
 
   const mentionsEmotion  = r.includes('感覺') || r.includes('覺得') || r.includes('衝動');
 
-
-
   if (mentionsBreakout)      behavior.push('突破交易');
 
   if (mentionsDip)           behavior.push('抄底');
@@ -7743,8 +6909,6 @@ function simulateAIAnalysis(transaction) {
   if (mentionsEmotion)       behavior.push('情緒交易');
 
   if (hasDiscipline && !mentionsEmotion) behavior.push('紀律交易');
-
-
 
   if (type === 'buy' && !mentionsDip && !hasDiscipline) {
 
@@ -7754,21 +6918,15 @@ function simulateAIAnalysis(transaction) {
 
   }
 
-
-
   if (behavior.length === 0) {
 
     behavior.push(BEHAVIOR_TAGS[Math.floor(Math.random() * BEHAVIOR_TAGS.length)]);
 
   }
 
-
-
   // Unique behaviors only
 
   behavior = [...new Set(behavior)].slice(0, 2);
-
-
 
   // Timing refinement
 
@@ -7778,15 +6936,11 @@ function simulateAIAnalysis(transaction) {
 
   if (mentionsEmotion)  timing = Math.random() > 0.3 ? '過晚' : '過早';
 
-
-
   // Supplement
 
   if (mentionsStop) supplement.push('停損');
 
   if (mentionsLong) supplement.push('長期持有');
-
-
 
   // Comment generation
 
@@ -7810,8 +6964,6 @@ function simulateAIAnalysis(transaction) {
 
   comment = commentOptions[Math.floor(Math.random() * commentOptions.length)];
 
-
-
   if (!hasDiscipline) {
 
     comment += '（建議補充交易理由以利 AI 分析。）';
@@ -7819,8 +6971,6 @@ function simulateAIAnalysis(transaction) {
     confidence = Math.max(30, confidence - 15);
 
   }
-
-
 
   return {
 
@@ -7838,15 +6988,11 @@ function simulateAIAnalysis(transaction) {
 
 }
 
-
-
 /* ============================================================
 
    TASK 2 — TRADE PAIRING ENGINE (FIFO) // UPDATED
 
 ============================================================ */
-
-
 
 // UPDATED: Match BUY and SELL into completed trade pairs using FIFO
 
@@ -7858,17 +7004,11 @@ function buildTradePairs(transactions) {
 
   const buyQueue = {};
 
-
-
   const sorted = [...transactions].sort((a, b) => a.date.localeCompare(b.date));
-
-
 
   sorted.forEach(tx => {
 
     const sym = tx.symbol;
-
-
 
     if (tx.type === 'buy') {
 
@@ -7896,23 +7036,17 @@ function buildTradePairs(transactions) {
 
       });
 
-
-
     } else if (tx.type === 'sell' || tx.type === 'daytrade') {
 
       if (!buyQueue[sym] || buyQueue[sym].length === 0) return; // no matching buy
 
       let remainSell = tx.quantity;
 
-
-
       while (remainSell > 0 && buyQueue[sym] && buyQueue[sym].length > 0) {
 
         const buy = buyQueue[sym][0];
 
         const matchQty = Math.min(buy.quantity, remainSell);
-
-
 
         const buyCost = buy.price * matchQty;
 
@@ -7922,23 +7056,17 @@ function buildTradePairs(transactions) {
 
         const roi = buyCost > 0 ? (pnl / buyCost) * 100 : 0;
 
-
-
         const buyDateObj  = new Date(buy.date);
 
         const sellDateObj = new Date(tx.date);
 
         const holdingDays = Math.round((sellDateObj - buyDateObj) / 86400000);
 
-
-
         let tradeType = 'swing';
 
         if (holdingDays === 0 || tx.type === 'daytrade') tradeType = 'daytrade';
 
         else if (holdingDays === 1) tradeType = 'nextDay';
-
-
 
         pairs.push({
 
@@ -7978,8 +7106,6 @@ function buildTradePairs(transactions) {
 
         });
 
-
-
         buy.quantity -= matchQty;
 
         remainSell  -= matchQty;
@@ -7992,21 +7118,15 @@ function buildTradePairs(transactions) {
 
   });
 
-
-
   return pairs;
 
 }
-
-
 
 /* ============================================================
 
    TASK 3 — PERFORMANCE METRICS ENGINE // UPDATED
 
 ============================================================ */
-
-
 
 // UPDATED: Compute win rate, ROI, expectancy — overall and by trade type
 
@@ -8019,8 +7139,6 @@ function analyzePerformance(pairs) {
     return { overall: empty, byType: { daytrade: {...empty}, nextDay: {...empty}, swing: {...empty} } };
 
   }
-
-
 
   function calcMetrics(subset) {
 
@@ -8038,21 +7156,15 @@ function analyzePerformance(pairs) {
 
     const winRate = wins.length / subset.length;
 
-
-
     // avgROI：ROI% 平均（每筆%報酬）
 
     const avgROI  = subset.reduce((s, p) => s + p.roi, 0) / subset.length;
-
-
 
     // avgWin/avgLoss：以 ROI% 計（供舊邏輯相容）
 
     const avgWin  = wins.length   > 0 ? wins.reduce((s, p) => s + p.roi, 0) / wins.length : 0;
 
     const avgLoss = losses.length > 0 ? Math.abs(losses.reduce((s, p) => s + p.roi, 0) / losses.length) : 0;
-
-
 
     // 期望值：改用元計算 → 真正與 avgROI 不同的指標
 
@@ -8064,15 +7176,11 @@ function analyzePerformance(pairs) {
 
     const expectancy = Math.round((winRate * avgWinDollar) - ((1 - winRate) * avgLossDollar));
 
-
-
     // 損益比（Payoff Ratio）= 平均獲利ROI / 平均虧損ROI
 
     // 回答：「贏一次能賺輸一次幾倍？」
 
     const profitRatio = avgLoss > 0 ? parseFloat((avgWin / avgLoss).toFixed(2)) : null;
-
-
 
     return {
 
@@ -8098,8 +7206,6 @@ function analyzePerformance(pairs) {
 
   }
 
-
-
   return {
 
     overall:  calcMetrics(pairs),
@@ -8118,15 +7224,11 @@ function analyzePerformance(pairs) {
 
 }
 
-
-
 /* ============================================================
 
    TASK 4 — BEHAVIOR PERFORMANCE ANALYSIS // UPDATED
 
 ============================================================ */
-
-
 
 // UPDATED: Map behavior_tags from BUY transactions to completed trade outcomes
 
@@ -8137,8 +7239,6 @@ function analyzeBehaviorPerformance(pairs) {
   const BEHAVIORS = ['追高','抄底','突破交易','情緒交易','紀律交易'];
 
   BEHAVIORS.forEach(b => { result[b] = { winRate: 0, avgROI: 0, count: 0, wins: 0, totalROI: 0 }; });
-
-
 
   pairs.forEach(p => {
 
@@ -8156,8 +7256,6 @@ function analyzeBehaviorPerformance(pairs) {
 
   });
 
-
-
   BEHAVIORS.forEach(b => {
 
     const r = result[b];
@@ -8174,21 +7272,15 @@ function analyzeBehaviorPerformance(pairs) {
 
   });
 
-
-
   return result;
 
 }
-
-
 
 /* ============================================================
 
    TASK 8 — STREAK & MAX DRAWDOWN // UPDATED
 
 ============================================================ */
-
-
 
 // UPDATED: Track consecutive win/loss streaks
 
@@ -8234,8 +7326,6 @@ function calcStreaks(pairs) {
 
 }
 
-
-
 // UPDATED: Max drawdown from peak PnL
 
 function calcMaxDrawdown(pairs) {
@@ -8261,8 +7351,6 @@ function calcMaxDrawdown(pairs) {
   return parseFloat(maxDD.toFixed(1));
 
 }
-
-
 
 // UPDATED: buildTransaction — includes tradeMethod (cash/margin)
 
@@ -8306,15 +7394,11 @@ function buildTransaction(raw, aiResult) {
 
 }
 
-
-
 /* ============================================================
 
    DAILY SNAPSHOT ENGINE
 
 ============================================================ */
-
-
 
 // REBUILT: buildDailySnapshots — uses positions from transactions + priceOverrides
 
@@ -8324,21 +7408,15 @@ function buildDailySnapshots() {
 
   if (transactions.length === 0) return [];
 
-
-
   const pairs  = buildTradePairs(transactions);
 
   const prices = DB.priceOverrides;
-
-
 
   // Unique trade dates in order
 
   const dates  = [...new Set(transactions.map(t => t.date))].sort();
 
   let cumRealized = 0;
-
-
 
   return dates.map(date => {
 
@@ -8348,15 +7426,11 @@ function buildDailySnapshots() {
 
     cumRealized += dayPairs.reduce((s, p) => s + p.pnl, 0);
 
-
-
     // Open positions as of this date
 
     const txUpToDate = transactions.filter(t => t.date <= date);
 
     const positions  = buildPositions(txUpToDate);
-
-
 
     const totalCost  = positions.reduce((s, p) => s + p.avgCost * p.shares, 0);
 
@@ -8367,8 +7441,6 @@ function buildDailySnapshots() {
       return s + px * p.shares;
 
     }, 0);
-
-
 
     return {
 
@@ -8388,15 +7460,11 @@ function buildDailySnapshots() {
 
 }
 
-
-
 /* ============================================================
 
    COMPUTED STATS
 
 ============================================================ */
-
-
 
 // REBUILT: computeStats — 100% transaction-driven, no DB.holdings
 
@@ -8406,15 +7474,11 @@ function computeStats() {
 
   const prices       = DB.priceOverrides;
 
-
-
   // ── Open positions from transaction history ──
 
   const positions  = buildPositions(transactions);
 
   const totalCost  = positions.reduce((s, p) => s + p.avgCost * p.shares, 0);
-
-
 
   // 只計算有設定現價的部位；沒有現價的不納入市值計算
 
@@ -8424,15 +7488,11 @@ function computeStats() {
 
   const hasPriceData    = posWithPrice.length > 0;
 
-
-
   const totalValue = posWithPrice.reduce((s, p) => s + prices[p.symbol] * p.shares, 0);
 
   const costWithPrice = posWithPrice.reduce((s, p) => s + p.avgCost * p.shares, 0);
 
   const unrealized = hasPriceData ? totalValue - costWithPrice : null; // null = no data
-
-
 
   // ── Realized PnL from completed trade pairs ──
 
@@ -8444,15 +7504,11 @@ function computeStats() {
 
   const completedCost = pairs.reduce((s, p) => s + (p.buyCost || 0), 0);
 
-
-
   // Today's completed pairs
 
   const todayStr      = new Date().toISOString().slice(0, 10);
 
   const todayRealized = pairs.filter(p => p.sellDate === todayStr).reduce((s, p) => s + p.pnl, 0);
-
-
 
   // ── Performance analytics ──
 
@@ -8464,8 +7520,6 @@ function computeStats() {
 
   const maxDD     = calcMaxDrawdown(pairs);
 
-
-
   // Behavior count (descriptive, from buy txs)
 
   const allBehaviors  = transactions.flatMap(t => t.behavior_tags || []);
@@ -8474,15 +7528,11 @@ function computeStats() {
 
   allBehaviors.forEach(b => { behaviorCount[b] = (behaviorCount[b] || 0) + 1; });
 
-
-
   const behavEntries  = Object.entries(behavPerf).filter(([, v]) => v.count > 0);
 
   const bestBehavior  = [...behavEntries].sort((a, b) => b[1].avgROI - a[1].avgROI)[0]?.[0] || '—';
 
   const worstBehavior = [...behavEntries].sort((a, b) => a[1].avgROI - b[1].avgROI)[0]?.[0] || '—';
-
-
 
   return {
 
@@ -8502,15 +7552,11 @@ function computeStats() {
 
 }
 
-
-
 /* ============================================================
 
    UI: HEADER & SUMMARY
 
 ============================================================ */
-
-
 
 function renderHeader() {
 
@@ -8520,13 +7566,9 @@ function renderHeader() {
 
   const colorClass = n => n >= 0 ? 'text-gain' : 'text-loss';
 
-
-
   const hdrUnr    = document.getElementById('hdr-unrealized');
 
   const hdrUnrPct = document.getElementById('hdr-unrealized-pct');
-
-
 
   // 左：未實現損益（可點擊）
 
@@ -8564,8 +7606,6 @@ function renderHeader() {
 
 }
 
-
-
 // UPDATED: renderSummary — performance-driven display
 
 function renderSummary() {
@@ -8593,8 +7633,6 @@ function renderSummary() {
     if (color) el.style.color = color;
 
   };
-
-
 
   // 左卡：股票市值 + 成本
 
@@ -8640,8 +7678,6 @@ function renderSummary() {
 
   setText('sum-cost-val', '成本 ' + Math.round(s.totalCost).toLocaleString());
 
-
-
   // 右卡：已實現損益 + 報酬率
 
   const sumReal = document.getElementById('sum-realized');
@@ -8680,8 +7716,6 @@ function renderSummary() {
 
   }
 
-
-
   // UPDATED: Accordion summary row — performance metrics
 
   const p = s.perf.overall;
@@ -8699,8 +7733,6 @@ function renderSummary() {
     : '—';
 
   setStyle('stat-expectancy', expVal, roiColor(p.expectancy));
-
-
 
   // UPDATED: Strategy breakdown (daytrade / nextDay / swing)
 
@@ -8735,8 +7767,6 @@ function renderSummary() {
   fillTypeCard('nd', s.perf.byType.nextDay);
 
   fillTypeCard('sw', s.perf.byType.swing);
-
-
 
   // UPDATED: Behavior × performance bars
 
@@ -8792,8 +7822,6 @@ function renderSummary() {
 
   }
 
-
-
   // UPDATED: Streak & max drawdown
 
   setText('streak-win',    s.streaks.maxWinStreak);
@@ -8804,15 +7832,11 @@ function renderSummary() {
 
 }
 
-
-
 /* ============================================================
 
    STATS ACCORDION TOGGLE
 
 ============================================================ */
-
-
 
 function toggleStatsAccordion() {
 
@@ -8820,15 +7844,11 @@ function toggleStatsAccordion() {
 
 }
 
-
-
 /* ============================================================
 
    UI: CHART
 
 ============================================================ */
-
-
 
 let assetChart = null;
 
@@ -8839,8 +7859,6 @@ let chartRange = 'ALL';   // '1M' | '3M' | 'ALL' | 'CUSTOM'
 let chartDateFrom = '';
 
 let chartDateTo   = '';
-
-
 
 function filterSnapshotsByRange(snapshots) {
 
@@ -8884,8 +7902,6 @@ function filterSnapshotsByRange(snapshots) {
 
 }
 
-
-
 function toggleChartRange() {
 
   const panel  = document.getElementById('chart-range-panel');
@@ -8897,8 +7913,6 @@ function toggleChartRange() {
   toggle.classList.toggle('open', isOpen);
 
 }
-
-
 
 function setChartRange(btn, range) {
 
@@ -8924,8 +7938,6 @@ function setChartRange(btn, range) {
 
 }
 
-
-
 function applyCustomRange() {
 
   chartDateFrom = document.getElementById('chart-date-from').value;
@@ -8944,8 +7956,6 @@ function applyCustomRange() {
 
 }
 
-
-
 function renderChart() {
 
   const allSnapshots = buildDailySnapshots();
@@ -8954,19 +7964,13 @@ function renderChart() {
 
   const labels       = snapshots.map(s => s.date.slice(5));
 
-
-
   const ctx = document.getElementById('asset-chart').getContext('2d');
 
   if (assetChart) { assetChart.destroy(); assetChart = null; }
 
   if (snapshots.length === 0) return;
 
-
-
   const ptRadius = snapshots.length > 15 ? 0 : 3;
-
-
 
   // ── 共用 Chart.js 選項 ─────────────────────────────────────────
 
@@ -9040,8 +8044,6 @@ function renderChart() {
 
   };
 
-
-
   // ── 總覽模式：四條線同一畫面 ──────────────────────────────────
 
   if (currentMetric === 'overview') {
@@ -9059,8 +8061,6 @@ function renderChart() {
     ];
 
     const series = ALL_SERIES.filter(s => overviewSelectedKeys.includes(s.key));
-
-
 
     const datasets = series.map(s => ({
 
@@ -9087,8 +8087,6 @@ function renderChart() {
       pointBorderColor: 'transparent',
 
     }));
-
-
 
     // 總覽模式有 legend
 
@@ -9118,8 +8116,6 @@ function renderChart() {
 
     };
 
-
-
     assetChart = new Chart(ctx, {
 
       type: 'line',
@@ -9133,8 +8129,6 @@ function renderChart() {
     return;
 
   }
-
-
 
   // ── 單線模式 ────────────────────────────────────────────────────
 
@@ -9150,8 +8144,6 @@ function renderChart() {
 
   };
 
-
-
   const metric    = metricMap[currentMetric];
 
   const lineColor = metric.color;
@@ -9162,8 +8154,6 @@ function renderChart() {
 
   gradient.addColorStop(1, lineColor + '00');
 
-
-
   const singleOptions = JSON.parse(JSON.stringify(sharedOptions));
 
   singleOptions.plugins.legend = { display: false };
@@ -9173,8 +8163,6 @@ function renderChart() {
     label: c => ' ' + Math.round(c.parsed.y).toLocaleString()
 
   };
-
-
 
   assetChart = new Chart(ctx, {
 
@@ -9218,8 +8206,6 @@ function renderChart() {
 
 }
 
-
-
 function switchChartMetric(btn, metric) {
 
   currentMetric = metric;
@@ -9236,19 +8222,13 @@ function switchChartMetric(btn, metric) {
 
 }
 
-
-
 /* ============================================================
 
    UI: CALENDAR
 
 ============================================================ */
 
-
-
 let calYear, calMonth;
-
-
 
 function initCalendar() {
 
@@ -9262,8 +8242,6 @@ function initCalendar() {
 
 }
 
-
-
 function changeMonth(delta) {
 
   calMonth += delta;
@@ -9276,23 +8254,17 @@ function changeMonth(delta) {
 
 }
 
-
-
 function renderCalendar() {
 
   const monthNames = ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
 
   document.getElementById('cal-month-label').textContent = `${calYear} · ${monthNames[calMonth]}`;
 
-
-
   const firstDay = new Date(calYear, calMonth, 1).getDay();
 
   const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
 
   const today = new Date();
-
-
 
   // Build day -> trades map
 
@@ -9316,13 +8288,9 @@ function renderCalendar() {
 
   });
 
-
-
   const container = document.getElementById('calendar-days');
 
   container.innerHTML = '';
-
-
 
   // Empty cells
 
@@ -9336,8 +8304,6 @@ function renderCalendar() {
 
   }
 
-
-
   for (let d = 1; d <= daysInMonth; d++) {
 
     const el = document.createElement('div');
@@ -9346,13 +8312,9 @@ function renderCalendar() {
 
     el.className = 'calendar-day' + (isToday ? ' today' : '');
 
-
-
     const trades = dayMap[d] || [];
 
     const hasTrades = trades.length > 0;
-
-
 
     if (hasTrades) {
 
@@ -9370,8 +8332,6 @@ function renderCalendar() {
 
       const hasSell   = dayPairs.length > 0;
 
-
-
       const numEl = document.createElement('div');
 
       numEl.className = 'calendar-day-num';
@@ -9379,8 +8339,6 @@ function renderCalendar() {
       numEl.textContent = d;
 
       el.appendChild(numEl);
-
-
 
       if (hasSell) {
 
@@ -9410,8 +8368,6 @@ function renderCalendar() {
 
       }
 
-
-
       el.onclick = () => openTradeDetailModal(calYear, calMonth + 1, d, trades);
 
     } else {
@@ -9426,23 +8382,17 @@ function renderCalendar() {
 
     }
 
-
-
     container.appendChild(el);
 
   }
 
 }
 
-
-
 /* ============================================================
 
    UI: TRADE DETAIL MODAL
 
 ============================================================ */
-
-
 
 // UPDATED: openTradeDetailModal — score rows removed, pair metrics shown
 
@@ -9452,13 +8402,9 @@ function openTradeDetailModal(y, m, d, trades) {
 
   document.getElementById('modal-detail-title').textContent = dateStr + ' 交易明細';
 
-
-
   const body = document.getElementById('modal-detail-body');
 
   body.innerHTML = '';
-
-
 
   if (trades.length === 0) {
 
@@ -9470,21 +8416,15 @@ function openTradeDetailModal(y, m, d, trades) {
 
   }
 
-
-
   // UPDATED: find completed pairs involving this day
 
   const allPairs = buildTradePairs(DB.transactions);
 
   const dayPairs = allPairs.filter(p => p.sellDate === dateStr || p.buyDate === dateStr);
 
-
-
   const list = document.createElement('div');
 
   list.className = 'trade-list';
-
-
 
   trades.forEach(t => {
 
@@ -9498,13 +8438,9 @@ function openTradeDetailModal(y, m, d, trades) {
 
     );
 
-
-
     const card = document.createElement('div');
 
     card.className = 'trade-card';
-
-
 
     const typeLabel = { buy: '買入', sell: '賣出', daytrade: '當沖' }[t.type] || t.type;
 
@@ -9512,15 +8448,11 @@ function openTradeDetailModal(y, m, d, trades) {
 
     const timingCls = t.timing === '合理' ? 'tag-timing-ok' : 'tag-timing-bad';
 
-
-
     // UPDATED: trade type label for pair
 
     const tradeTypeLabel = {daytrade:'當沖', nextDay:'隔日沖', swing:'波段'}[matchPair?.type] || '';
 
     const tradeTypeCss   = {daytrade:'type-daytrade', nextDay:'type-buy', swing:'type-sell'}[matchPair?.type] || '';
-
-
 
     // UPDATED: win/loss indicator
 
@@ -9532,13 +8464,9 @@ function openTradeDetailModal(y, m, d, trades) {
 
       : '';
 
-
-
     // UPDATED: ROI from pair
 
     const pairRoi = matchPair ? matchPair.roi : null;
-
-
 
     card.innerHTML = `
 
@@ -9632,8 +8560,6 @@ function openTradeDetailModal(y, m, d, trades) {
 
         ${t.reason ? `<div class="trade-reason-block">"${t.reason}"</div>` : ''}
 
-
-
         <div class="ai-block">
 
           <div class="ai-block-header">
@@ -9664,13 +8590,9 @@ function openTradeDetailModal(y, m, d, trades) {
 
     `;
 
-
-
     list.appendChild(card);
 
   });
-
-
 
   body.appendChild(list);
 
@@ -9678,15 +8600,11 @@ function openTradeDetailModal(y, m, d, trades) {
 
 }
 
-
-
 /* ============================================================
 
    UI: DEEP ANALYSIS MODAL
 
 ============================================================ */
-
-
 
 // UPDATED: openDeepAnalysis — performance analytics replacing score bars
 
@@ -9697,8 +8615,6 @@ function openDeepAnalysis(tradeId) {
   const t = transactions.find(tx => tx.id === tradeId);
 
   if (!t) return;
-
-
 
   // UPDATED: use pair engine
 
@@ -9712,8 +8628,6 @@ function openDeepAnalysis(tradeId) {
 
   const maxDD    = calcMaxDrawdown(allPairs);
 
-
-
   // Find pair associated with this transaction
 
   const myPair = allPairs.find(p =>
@@ -9724,11 +8638,7 @@ function openDeepAnalysis(tradeId) {
 
   );
 
-
-
   const BEHAVIORS = ['追高','抄底','突破交易','情緒交易','紀律交易'];
-
-
 
   // Best/worst behavior
 
@@ -9740,21 +8650,15 @@ function openDeepAnalysis(tradeId) {
 
   const worstB = bEntries[bEntries.length - 1] || '—';
 
-
-
   const roiColor = v => v >= 0 ? '#964444' : '#6b855d';
 
   const fmt2 = v => (v >= 0 ? '+' : '') + v.toFixed(2) + '%';
-
-
 
   const body = document.getElementById('deep-analysis-body');
 
   body.innerHTML = `
 
     <div class="deep-analysis-content">
-
-
 
       <!-- UPDATED: This pair detail -->
 
@@ -9812,8 +8716,6 @@ function openDeepAnalysis(tradeId) {
 
       </div>`}
 
-
-
       <!-- UPDATED: Overall performance -->
 
       <div class="analysis-section">
@@ -9862,8 +8764,6 @@ function openDeepAnalysis(tradeId) {
 
       </div>
 
-
-
       <!-- UPDATED: Behavior performance -->
 
       <div class="analysis-section">
@@ -9906,8 +8806,6 @@ function openDeepAnalysis(tradeId) {
 
       </div>
 
-
-
       <!-- UPDATED: Streak tracking -->
 
       <div class="analysis-section">
@@ -9940,8 +8838,6 @@ function openDeepAnalysis(tradeId) {
 
       </div>
 
-
-
       <!-- AI description -->
 
       <div class="analysis-section">
@@ -9960,19 +8856,13 @@ function openDeepAnalysis(tradeId) {
 
       </div>
 
-
-
     </div>
 
   `;
 
-
-
   openModal('modal-deep-analysis');
 
 }
-
-
 
 /* ============================================================
 
@@ -9980,11 +8870,7 @@ function openDeepAnalysis(tradeId) {
 
 ============================================================ */
 
-
-
 let selectedType = 'buy';
-
-
 
 function openAddTradeModal() {
 
@@ -10018,8 +8904,6 @@ function openAddTradeModal() {
 
 }
 
-
-
 function selectType(btn, type) {
 
   selectedType = type;
@@ -10033,8 +8917,6 @@ function selectType(btn, type) {
   });
 
 }
-
-
 
 let selectedTradeMethod = 'cash';
 
@@ -10052,8 +8934,6 @@ function selectMethod(btn, method) {
 
 }
 
-
-
 function submitTrade() {
 
   const symbol = document.getElementById('f-symbol').value.trim();
@@ -10070,8 +8950,6 @@ function submitTrade() {
 
   const reason = document.getElementById('f-reason').value.trim();
 
-
-
   if (!symbol || !name || !date || !price || !qty) {
 
     showToast('請填寫必要欄位（代號、名稱、日期、價格、股數）');
@@ -10079,8 +8957,6 @@ function submitTrade() {
     return;
 
   }
-
-
 
   // UPDATED: buildTransaction no longer needs holdings param
 
@@ -10090,15 +8966,11 @@ function submitTrade() {
 
   const t   = buildTransaction(raw, ai);
 
-
-
   const tx = DB.transactions;
 
   tx.push(t);
 
   DB.transactions = tx;
-
-
 
   // Auto-create snapshot
 
@@ -10116,8 +8988,6 @@ function submitTrade() {
 
   }
 
-
-
   closeModal('modal-add-trade');
 
   renderAll();
@@ -10126,15 +8996,11 @@ function submitTrade() {
 
 }
 
-
-
 /* ============================================================
 
    UI: HOLDINGS PAGE
 
 ============================================================ */
-
-
 
 // REBUILT: renderHoldings — computed from transactions, no stored holdings
 
@@ -10147,8 +9013,6 @@ function renderHoldings() {
   const list = document.getElementById('holdings-list');
 
   list.innerHTML = '';
-
-
 
   if (positions.length === 0) {
 
@@ -10170,8 +9034,6 @@ function renderHoldings() {
 
   }
 
-
-
   let totalValue = 0, totalCost = 0;
 
   positions.forEach(p => {
@@ -10184,13 +9046,9 @@ function renderHoldings() {
 
   });
 
-
-
   document.getElementById('hold-market-val').textContent = Math.round(totalValue).toLocaleString();
 
   document.getElementById('hold-total-cost').textContent = Math.round(totalCost).toLocaleString();
-
-
 
   positions.forEach(p => {
 
@@ -10203,8 +9061,6 @@ function renderHoldings() {
     const roi      = hasPrice && p.avgCost > 0 ? ((px - p.avgCost) / p.avgCost * 100) : null;
 
     const isGain   = pnl !== null ? pnl >= 0 : null;
-
-
 
     const card = document.createElement('div');
 
@@ -10322,10 +9178,6 @@ function renderHoldings() {
 
 }
 
-
-
-
-
 // REBUILT: price override modal — the only manual input for the holdings page
 
 function openPriceModal(symbol, name, currentPx) {
@@ -10352,8 +9204,6 @@ function openPriceModal(symbol, name, currentPx) {
 
 }
 
-
-
 // REBUILT: submitHolding — saves price override only
 
 function submitHolding() {
@@ -10374,17 +9224,11 @@ function submitHolding() {
 
 }
 
-
-
-
-
 /* ============================================================
 
    PAGE SWITCHING
 
 ============================================================ */
-
-
 
 function switchPage(page) {
 
@@ -10406,15 +9250,11 @@ function switchPage(page) {
 
 }
 
-
-
 /* ============================================================
 
    MODAL HELPERS
 
 ============================================================ */
-
-
 
 function openModal(id) {
 
@@ -10422,15 +9262,11 @@ function openModal(id) {
 
 }
 
-
-
 function closeModal(id) {
 
   document.getElementById(id).classList.remove('open');
 
 }
-
-
 
 // Close on overlay click
 
@@ -10444,15 +9280,11 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
 
 });
 
-
-
 /* ============================================================
 
    TOAST
 
 ============================================================ */
-
-
 
 let toastTimer = null;
 
@@ -10470,15 +9302,11 @@ function showToast(msg) {
 
 }
 
-
-
 /* ============================================================
 
    SEED DATA (Demo)
 
 ============================================================ */
-
-
 
 // REBUILT: seedDemoData — 真實交易（來源：券商對帳截圖 2026/04/20~04/23）
 
@@ -10493,8 +9321,6 @@ function seedDemoData() {
   localStorage.removeItem('tl_holdings');
 
   localStorage.removeItem('tl_price_overrides');
-
-
 
   // ── 有效交易（排除「現金不足。無法交易。」共2筆）──
 
@@ -10536,8 +9362,6 @@ function seedDemoData() {
 
     { date:'2026-04-23', symbol:'2303',   name:'聯電',          type:'buy', price:72.2,   quantity:4000,  fee:411.54  },
 
-
-
     // ── 2026-04-27 新增 ──────────────────────────────────────────
 
     // 國巨 2327 買入 10,000股（5筆，依時間 09:48:45~09:48:57 升冪）
@@ -10559,8 +9383,6 @@ function seedDemoData() {
     { date:'2026-04-27', symbol:'2345',   name:'智邦',          type:'buy', price:2140,   quantity:1000,  fee:3049.5,  behavior_tags:['突破交易'], timing:'合理' },
 
     { date:'2026-04-27', symbol:'2345',   name:'智邦',          type:'sell',price:2205,   quantity:3000,  fee:9426.38 },
-
-
 
     // ── 2026-04-28 ───────────────────────────────────────────────
 
@@ -10611,8 +9433,6 @@ function seedDemoData() {
     { date:'2026-04-28', symbol:'2327',   name:'國巨',          type:'sell',price:326.0,  quantity:3000,  fee:1393.65, tradeMethod:'margin' },
 
     { date:'2026-04-28', symbol:'2327',   name:'國巨',          type:'sell',price:326.0,  quantity:4000,  fee:1858.2,  tradeMethod:'margin' },
-
-
 
     // ── 2026-05-06 ──
 
@@ -10680,8 +9500,6 @@ function seedDemoData() {
 
   ];
 
-
-
   const transactions = rawTxs.map(raw => ({
 
     id:          genId(),
@@ -10718,8 +9536,6 @@ function seedDemoData() {
 
   }));
 
-
-
   DB.transactions = transactions;
 
   DB.snapshots    = [];
@@ -10736,8 +9552,6 @@ function seedDemoData() {
 
 }
 
-
-
 function fmtDate(base, daysOffset) {
 
   const d = new Date(base);
@@ -10748,15 +9562,11 @@ function fmtDate(base, daysOffset) {
 
 }
 
-
-
 /* ============================================================
 
    SCREENSHOT → AI PARSE (Holdings)
 
 ============================================================ */
-
-
 
 async function parseScreenshot(event) {
 
@@ -10764,13 +9574,9 @@ async function parseScreenshot(event) {
 
   if (!file) return;
 
-
-
   const area = document.getElementById('screenshot-parse-area');
 
   const status = document.getElementById('screenshot-parse-status');
-
-
 
   // Show loading
 
@@ -10781,8 +9587,6 @@ async function parseScreenshot(event) {
   status.style.display = 'flex';
 
   area.style.opacity = '0.5';
-
-
 
   try {
 
@@ -10800,11 +9604,7 @@ async function parseScreenshot(event) {
 
     });
 
-
-
     const mediaType = file.type || 'image/jpeg';
-
-
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
 
@@ -10848,13 +9648,9 @@ async function parseScreenshot(event) {
 
     });
 
-
-
     const data = await response.json();
 
     const text = data.content?.find(b => b.type === 'text')?.text || '';
-
-
 
     let parsed;
 
@@ -10870,8 +9666,6 @@ async function parseScreenshot(event) {
 
     }
 
-
-
     // REBUILT: fill form fields for price override
 
     if (parsed.symbol)       document.getElementById('hf-symbol').value  = parsed.symbol;
@@ -10886,19 +9680,13 @@ async function parseScreenshot(event) {
 
     if (parsed.avgCost)      document.getElementById('hf-avgcost').value = parsed.avgCost;
 
-
-
     const filled = [parsed.symbol, parsed.name, parsed.currentPrice]
 
       .filter(v => v !== null && v !== undefined).length;
 
-
-
     status.className = 'screenshot-parse-status parse-success';
 
     status.innerHTML = `<span>✓ 辨識完成（${filled}/3 欄），現價已帶入，確認後儲存</span>`;
-
-
 
   } catch(err) {
 
@@ -10919,10 +9707,6 @@ async function parseScreenshot(event) {
   }
 
 }
-
-
-
-
 
 // 莫蘭迪色盤 — muted, desaturated
 
@@ -10950,23 +9734,15 @@ const MORANDI_PALETTE = [
 
 ];
 
-
-
-
-
 /* ============================================================
 
    HOLDINGS CHART VIEW — donut + legend
 
 ============================================================ */
 
-
-
 let holdingsDonutChart = null;
 
 let currentHoldingsView = 'list';
-
-
 
 function switchHoldingsView(view) {
 
@@ -10990,19 +9766,13 @@ function switchHoldingsView(view) {
 
 }
 
-
-
 function renderDonutChart() {
 
   const positions = buildPositions(DB.transactions);
 
   const prices    = DB.priceOverrides;
 
-
-
   if (positions.length === 0) return;
-
-
 
   // Compute market value per position
 
@@ -11016,11 +9786,7 @@ function renderDonutChart() {
 
   }));
 
-
-
   const totalVal = items.reduce((s, i) => s + i.value, 0);
-
-
 
   // Sort descending, collapse tail into "其他"
 
@@ -11032,8 +9798,6 @@ function renderDonutChart() {
 
   const others   = items.slice(TOP_N);
 
-
-
   if (others.length > 0) {
 
     const otherVal = others.reduce((s, i) => s + i.value, 0);
@@ -11042,25 +9806,17 @@ function renderDonutChart() {
 
   }
 
-
-
   const labels = chartItems.map(i => i.name);
 
   const data   = chartItems.map(i => parseFloat((i.value / totalVal * 100).toFixed(2)));
 
   const colors = chartItems.map((_, idx) => MORANDI_PALETTE[idx % MORANDI_PALETTE.length]);
 
-
-
   // Destroy previous instance
 
   if (holdingsDonutChart) { holdingsDonutChart.destroy(); holdingsDonutChart = null; }
 
-
-
   const ctx = document.getElementById('holdings-donut').getContext('2d');
-
-
 
   holdingsDonutChart = new Chart(ctx, {
 
@@ -11132,8 +9888,6 @@ function renderDonutChart() {
 
   });
 
-
-
   // Build legend
 
   const legendEl = document.getElementById('donut-legend');
@@ -11168,21 +9922,13 @@ function renderDonutChart() {
 
 }
 
-
-
-
-
 /* ============================================================
 
    HOLDINGS HISTORY TAB
 
 ============================================================ */
 
-
-
 let txTypeFilter = 'all';
-
-
 
 function setTxFilter(btn, type) {
 
@@ -11195,8 +9941,6 @@ function setTxFilter(btn, type) {
   renderTxHistory();
 
 }
-
-
 
 function renderTxHistory() {
 
@@ -11214,13 +9958,9 @@ function renderTxHistory() {
 
     .sort((a, b) => b.date.localeCompare(a.date));
 
-
-
   const container = document.getElementById('tx-history-list');
 
   if (!container) return;
-
-
 
   if (txs.length === 0) {
 
@@ -11230,15 +9970,11 @@ function renderTxHistory() {
 
   }
 
-
-
   const typeLabel = { buy: '買入', sell: '賣出', daytrade: '當沖' };
 
   const typeCls   = { buy: 'type-buy', sell: 'type-sell', daytrade: 'type-daytrade' };
 
   const colorClass = n => n >= 0 ? 'text-gain' : 'text-loss';
-
-
 
   container.innerHTML = txs.map(t => {
 
@@ -11294,21 +10030,15 @@ function renderTxHistory() {
 
 }
 
-
-
 /* ============================================================
 
    PAIRS MODAL (已實現 / 策略分類)
 
 ============================================================ */
 
-
-
 let pairsModalType  = 'all';
 
 let pairsModalRange = '1M';
-
-
 
 function openPairsModal(type) {
 
@@ -11316,13 +10046,9 @@ function openPairsModal(type) {
 
   pairsModalRange = '1M';
 
-
-
   const titles = { all: '已實現損益', daytrade: '當沖紀錄', nextDay: '隔日沖紀錄', swing: '波段紀錄' };
 
   document.getElementById('pairs-modal-title').textContent = titles[type] || '交易紀錄';
-
-
 
   // Reset range buttons
 
@@ -11336,15 +10062,11 @@ function openPairsModal(type) {
 
   document.getElementById('pairs-date-to').value   = '';
 
-
-
   renderPairsModal();
 
   openModal('modal-pairs');
 
 }
-
-
 
 function setPairsRange(btn, range) {
 
@@ -11364,13 +10086,9 @@ function setPairsRange(btn, range) {
 
 }
 
-
-
 function renderPairsModal() {
 
   const allPairs = buildTradePairs(DB.transactions);
-
-
 
   // Type filter
 
@@ -11380,15 +10098,11 @@ function renderPairsModal() {
 
     : allPairs.filter(p => p.type === pairsModalType);
 
-
-
   // Date filter
 
   const customFrom = document.getElementById('pairs-date-from')?.value;
 
   const customTo   = document.getElementById('pairs-date-to')?.value;
-
-
 
   if (customFrom || customTo) {
 
@@ -11416,13 +10130,9 @@ function renderPairsModal() {
 
   }
 
-
-
   // Sort newest first
 
   pairs = [...pairs].sort((a, b) => b.sellDate.localeCompare(a.sellDate));
-
-
 
   // Summary strip
 
@@ -11435,8 +10145,6 @@ function renderPairsModal() {
   const avgROI   = pairs.length > 0 ? (pairs.reduce((s, p) => s + p.roi, 0) / pairs.length).toFixed(2) : '—';
 
   const colorClass = n => n >= 0 ? '#964444' : '#6b855d';
-
-
 
   const strip = document.getElementById('pairs-summary-strip');
 
@@ -11460,8 +10168,6 @@ function renderPairsModal() {
 
     </div>`).join('');
 
-
-
   // Pair rows — like screenshot: symbol, 成交量/均價, 損益/報酬率, 日期
 
   const typeLabel = { daytrade: '當沖', nextDay: '隔日沖', swing: '波段' };
@@ -11470,8 +10176,6 @@ function renderPairsModal() {
 
   const list = document.getElementById('pairs-modal-list');
 
-
-
   if (pairs.length === 0) {
 
     list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-text">此條件無已實現交易</div></div>';
@@ -11479,8 +10183,6 @@ function renderPairsModal() {
     return;
 
   }
-
-
 
   list.innerHTML = pairs.map(p => {
 
@@ -11495,8 +10197,6 @@ function renderPairsModal() {
     const tLabel    = typeLabel[p.type] || '';
 
     const tColor    = typeColor[p.type] || 'var(--text-muted)';
-
-
 
     return `
 
@@ -11540,23 +10240,15 @@ function renderPairsModal() {
 
 }
 
-
-
-
-
 /* ============================================================
 
    OVERVIEW MODAL
 
 ============================================================ */
 
-
-
 // 預設全選
 
 let overviewSelectedKeys = ['total_value','total_cost','unrealized','realized'];
-
-
 
 function openOverviewModal() {
 
@@ -11582,8 +10274,6 @@ function openOverviewModal() {
 
 }
 
-
-
 function applyOverview() {
 
   // Read selected
@@ -11596,8 +10286,6 @@ function applyOverview() {
 
   });
 
-
-
   if (overviewSelectedKeys.length === 0) {
 
     showToast('請至少選擇一條折線');
@@ -11606,11 +10294,7 @@ function applyOverview() {
 
   }
 
-
-
   closeModal('modal-overview');
-
-
 
   // Activate overview mode on chart
 
@@ -11630,17 +10314,11 @@ function applyOverview() {
 
 }
 
-
-
-
-
 /* ============================================================
 
    ANALYTICS MODAL — 年化報酬率 & 投資周轉率
 
 ============================================================ */
-
-
 
 function openAnalyticsModal() {
 
@@ -11649,8 +10327,6 @@ function openAnalyticsModal() {
   openModal('modal-analytics');
 
 }
-
-
 
 function recalcAnalytics() {
 
@@ -11674,8 +10350,6 @@ function recalcAnalytics() {
 
   const roiColor = v => v >= 0 ? '#964444' : '#6b855d';
 
-
-
   // ── 持有天數（最早交易日 → 今天）──────────────────────────────
 
   const dates = txs.map(t => t.date).sort();
@@ -11690,8 +10364,6 @@ function recalcAnalytics() {
 
     : null;
 
-
-
   // ── 總報酬率（已實現 + 未實現）÷ 成本 ─────────────────────────
 
   const totalReturn = s.realized + (s.unrealized ?? 0);
@@ -11702,8 +10374,6 @@ function recalcAnalytics() {
 
   const totalROI    = totalInvested > 0 ? totalReturn / totalInvested : null;
 
-
-
   setText('an-days', days ? days + ' 天' : '—', 'var(--gold)');
 
   setText('an-total-roi', totalROI !== null
@@ -11711,8 +10381,6 @@ function recalcAnalytics() {
     ? (totalROI >= 0 ? '+' : '') + (totalROI * 100).toFixed(2) + '%'
 
     : '—', totalROI !== null ? roiColor(totalROI) : null);
-
-
 
   // ── 年化報酬率 ───────────────────────────────────────────────
 
@@ -11732,8 +10400,6 @@ function recalcAnalytics() {
 
   }
 
-
-
   // ── 買賣金額 ─────────────────────────────────────────────────
 
   const buyVol  = txs.filter(t => t.type === 'buy')
@@ -11744,21 +10410,15 @@ function recalcAnalytics() {
 
     .reduce((s, t) => s + t.price * t.quantity, 0);
 
-
-
   const fmtM = v => v >= 1000000
 
     ? (v / 1000000).toFixed(2) + 'M'
 
     : v >= 1000 ? (v / 1000).toFixed(0) + 'K' : Math.round(v).toLocaleString();
 
-
-
   setText('an-buy-vol',  buyVol  > 0 ? fmtM(buyVol)  : '—');
 
   setText('an-sell-vol', sellVol > 0 ? fmtM(sellVol) : '—');
-
-
 
   // ── 投資周轉率 ───────────────────────────────────────────────
 
@@ -11780,19 +10440,11 @@ function recalcAnalytics() {
 
 }
 
-
-
-
-
-
-
 /* ============================================================
 
    SHARED MODAL HELPERS
 
 ============================================================ */
-
-
 
 function _syncTabs(containerId, range) {
 
@@ -11803,8 +10455,6 @@ function _syncTabs(containerId, range) {
   });
 
 }
-
-
 
 function _cutoffDate(range, customFrom, customTo) {
 
@@ -11830,8 +10480,6 @@ function _cutoffDate(range, customFrom, customTo) {
 
 }
 
-
-
 /* ============================================================
 
    CHART INSTANCES (pie charts)
@@ -11841,8 +10489,6 @@ function _cutoffDate(range, customFrom, customTo) {
 let _unrPieChart = null;
 
 let _reaPieChart = null;
-
-
 
 function _drawPie(canvasId, gainVal, lossVal, centerId) {
 
@@ -11854,15 +10500,11 @@ function _drawPie(canvasId, gainVal, lossVal, centerId) {
 
   if (existingChart) existingChart.destroy();
 
-
-
   const total  = gainVal + lossVal;
 
   const gainPct = total > 0 ? (gainVal / total * 100).toFixed(1) : '0.0';
 
   const lossPct = total > 0 ? (lossVal / total * 100).toFixed(1) : '0.0';
-
-
 
   const center = document.getElementById(centerId);
 
@@ -11875,8 +10517,6 @@ function _drawPie(canvasId, gainVal, lossVal, centerId) {
       : '<div style="font-size:10px;color:var(--text-muted)">無資料</div>';
 
   }
-
-
 
   const chart = new Chart(ctx, {
 
@@ -11946,15 +10586,11 @@ function _drawPie(canvasId, gainVal, lossVal, centerId) {
 
   });
 
-
-
   if (canvasId === 'unr-pie') _unrPieChart = chart;
 
   else                         _reaPieChart = chart;
 
 }
-
-
 
 /* ============================================================
 
@@ -11966,11 +10602,7 @@ function _drawPie(canvasId, gainVal, lossVal, centerId) {
 
 ============================================================ */
 
-
-
 let unrRange = 'all';
-
-
 
 function openUnrealizedModal() {
 
@@ -11980,15 +10612,11 @@ function openUnrealizedModal() {
 
 }
 
-
-
 function renderUnrealizedModal() {
 
   const prices = DB.priceOverrides;
 
   const txs    = DB.transactions;
-
-
 
   // 每個 symbol 最早買入日
 
@@ -12002,13 +10630,9 @@ function renderUnrealizedModal() {
 
   });
 
-
-
   // 開倉部位（唯一來源：buildPositions）
 
   const positions = buildPositions(txs);
-
-
 
   // 計算各部位未實現損益
 
@@ -12040,8 +10664,6 @@ function renderUnrealizedModal() {
 
   });
 
-
-
   // 盈虧分組（以市值為基準）
 
   const gains  = items.filter(i => i.pnl !== null && i.pnl > 0);
@@ -12056,13 +10678,9 @@ function renderUnrealizedModal() {
 
   const lossAmt    = losses.reduce((s, i) => s + Math.abs(i.pnl), 0);
 
-
-
   // 圓餅圖（盈虧市值占比）
 
   _drawPie('unr-pie', gainMktVal, lossMktVal, 'unr-pie-center');
-
-
 
   // Legend 數字
 
@@ -12075,8 +10693,6 @@ function renderUnrealizedModal() {
   si('unr-loss-count',losses.length + '檔');
 
   si('unr-loss-amt',  '-' + Math.round(lossAmt).toLocaleString() + '元');
-
-
 
   // 明細列表
 
@@ -12091,8 +10707,6 @@ function renderUnrealizedModal() {
   }
 
   const rc = v => v >= 0 ? '#964444' : '#6b855d';
-
-
 
   list.innerHTML = items.map(p => {
 
@@ -12300,443 +10914,9 @@ function selectPickerMonth(month) {
    INIT
 ============================================================ */
 
-
 /* ============================================================
    CLOUD SYNC & LIVE QUOTES LOGIC (Google Apps Script)
 ============================================================ */
-
-// 內建完整 Google Apps Script 原始碼
-const GAS_SOURCE_CODE = "/**
- * ==============================================================================
- * TradeLog Google Apps Script (GAS) 雲端後端與即時股價 API
- * ==============================================================================
- * 
- * 功能：
- * 1. 交易紀錄備份（自動存入 Google 表格「交易紀錄」）
- * 2. 交易紀錄還原（從 Google 表格拉取所有紀錄還原至前端 LocalStorage）
- * 3. 台灣股市即時 / 最新盤中股價查詢（支援上市 .TW 與上櫃 .TWO，自動判定）
- * 4. 試算表自動建立美化欄位與公式
- * 5. 智慧相容：無論從 Google 試算表或直接由 script.google.com 建立，皆全自動防呆連線！
- */
-
-// 可在此填入欲指定的 Google 試算表 ID（若留空且未綁定表格，系統將自動於雲端硬碟建立「TradeLog 投資帳本」）
-const SPREADSHEET_ID = \"\";
-
-// 試算表工作表名稱定義
-const SHEET_TX = \"交易紀錄\";
-const SHEET_HOLDINGS = \"持股現價\";
-const SHEET_LOGS = \"備份日誌\";
-
-/**
- * 取得試算表實例（智慧相容模式，支援綁定表格、指定 ID 與自動建表）
- */
-function getSpreadsheet() {
-  // 1. 若有指定 SPREADSHEET_ID 則優先使用
-  if (typeof SPREADSHEET_ID === \"string\" && SPREADSHEET_ID.trim() !== \"\") {
-    try {
-      return SpreadsheetApp.openById(SPREADSHEET_ID.trim());
-    } catch (e) {
-      console.error(\"無法依指定 ID 開啟試算表: \" + e.message);
-    }
-  }
-
-  // 2. 若為試算表容器綁定腳本 (Container-bound Script)
-  const active = SpreadsheetApp.getActiveSpreadsheet();
-  if (active) return active;
-
-  // 3. 若為獨立專案 (Standalone Project)，檢查是否已自動建立過試算表
-  const props = PropertiesService.getScriptProperties();
-  const autoId = props.getProperty(\"AUTOGEN_SPREADSHEET_ID\");
-  if (autoId) {
-    try {
-      return SpreadsheetApp.openById(autoId);
-    } catch (e) {
-      console.warn(\"先前自動建立之試算表已不存在，重新建立...\");
-    }
-  }
-
-  // 自動建立專屬試算表，免手動建表與填 ID！
-  const newSs = SpreadsheetApp.create(\"TradeLog 投資帳本\");
-  props.setProperty(\"AUTOGEN_SPREADSHEET_ID\", newSs.getId());
-  return newSs;
-}
-
-/**
- * 取得或自動建立指定的工作表
- */
-function getOrCreateSheet(sheetName) {
-  const ss = getSpreadsheet();
-  let sheet = ss.getSheetByName(sheetName);
-  if (!sheet) {
-    sheet = ss.insertSheet(sheetName);
-  }
-  return sheet;
-}
-
-/**
- * 處理 GET 請求
- * 支援:
- * ?action=restore (還原交易與現價)
- * ?action=fetch_prices&symbols=2330,2449,6274 (查詢即時股價)
- * ?action=ping (測試連線)
- */
-function doGet(e) {
-  return handleRequest(e, \"GET\");
-}
-
-/**
- * 處理 POST 請求
- * 支援:
- * action=\"backup\" (備份資料至表格)
- * action=\"fetch_prices\" (查詢即時股價)
- * action=\"restore\" (還原資料)
- */
-function doPost(e) {
-  return handleRequest(e, \"POST\");
-}
-
-function handleRequest(e, method) {
-  try {
-    let params = {};
-    if (e && e.parameter) {
-      params = e.parameter;
-    }
-    
-    // 解析 POST 內容 (支援 text/plain 與 application/json)
-    let postData = null;
-    if (e && e.postData && e.postData.contents) {
-      try {
-        postData = JSON.parse(e.postData.contents);
-      } catch (err) {
-        // 若不是純 JSON 則忽略
-      }
-    }
-
-    const action = (postData && postData.action) || params.action || \"ping\";
-
-    let responseData = {};
-
-    switch (action) {
-      case \"ping\":
-        const ssInstance = getSpreadsheet();
-        responseData = {
-          status: \"success\",
-          message: \"TradeLog Google Apps Script API 運作正常！\",
-          sheetUrl: ssInstance ? ssInstance.getUrl() : null,
-          sheetName: ssInstance ? ssInstance.getName() : null,
-          timestamp: new Date().toISOString()
-        };
-        break;
-
-      case \"backup\":
-        responseData = handleBackup(postData || params);
-        break;
-
-      case \"restore\":
-        responseData = handleRestore();
-        break;
-
-      case \"fetch_prices\":
-        const symbols = (postData && postData.symbols) || (params.symbols ? params.symbols.split(\",\") : []);
-        responseData = handleFetchPrices(symbols);
-        break;
-
-      default:
-        responseData = { status: \"error\", message: \"未知的 action: \" + action };
-    }
-
-    return createJsonResponse(responseData);
-  } catch (error) {
-    return createJsonResponse({
-      status: \"error\",
-      message: error.toString(),
-      stack: error.stack
-    });
-  }
-}
-
-function createJsonResponse(data) {
-  const output = ContentService.createTextOutput(JSON.stringify(data));
-  output.setMimeType(ContentService.MimeType.JSON);
-  return output;
-}
-
-/**
- * 備份所有交易資料與現價至 Google 表格
- */
-function handleBackup(payload) {
-  const transactions = payload.transactions || [];
-  const priceOverrides = payload.priceOverrides || {};
-
-  const ss = getSpreadsheet();
-  const txSheet = getOrCreateSheet(SHEET_TX);
-
-  // 初始化 / 清理並重寫標題列
-  txSheet.clear();
-  const headers = [
-    \"交易ID\", \"交易日期\", \"股票代號\", \"股票名稱\", \"類型\", 
-    \"交易方式\", \"成交價格\", \"成交股數\", \"手續費\", \"總金額\", 
-    \"買賣理由\", \"AI行為標籤\", \"進出場時機\", \"AI短評\", \"備份更新時間\"
-  ];
-
-  txSheet.appendRow(headers);
-  
-  // 美化標題列
-  const headerRange = txSheet.getRange(1, 1, 1, headers.length);
-  headerRange.setBackground(\"#131922\")
-             .setFontColor(\"#d4a843\")
-             .setFontWeight(\"bold\")
-             .setHorizontalAlignment(\"center\");
-  txSheet.setFrozenRows(1);
-
-  const nowStr = Utilities.formatDate(new Date(), \"Asia/Taipei\", \"yyyy-MM-dd HH:mm:ss\");
-
-  // 寫入交易列
-  if (transactions.length > 0) {
-    const rows = transactions.map(t => [
-      t.id || \"\",
-      t.date || \"\",
-      t.symbol || \"\",
-      t.name || \"\",
-      t.type || \"\",
-      t.tradeMethod || \"cash\",
-      t.price || 0,
-      t.quantity || 0,
-      t.fee || 0,
-      t.totalAmount || (t.price * t.quantity),
-      t.reason || \"\",
-      (t.behavior_tags || []).join(\", \"),
-      t.timing || \"\",
-      t.ai_comment || \"\",
-      nowStr
-    ]);
-
-    txSheet.getRange(2, 1, rows.length, headers.length).setValues(rows);
-  }
-
-  // 備份現價表 (持股現價工作表)
-  const holdingsSheet = getOrCreateSheet(SHEET_HOLDINGS);
-  holdingsSheet.clear();
-  const hHeaders = [\"股票代號\", \"最新現價\", \"備份時間\"];
-  holdingsSheet.appendRow(hHeaders);
-  holdingsSheet.getRange(1, 1, 1, hHeaders.length)
-               .setBackground(\"#131922\")
-               .setFontColor(\"#79c0ff\")
-               .setFontWeight(\"bold\")
-               .setHorizontalAlignment(\"center\");
-  holdingsSheet.setFrozenRows(1);
-
-  const priceEntries = Object.entries(priceOverrides);
-  if (priceEntries.length > 0) {
-    const pRows = priceEntries.map(([sym, px]) => [sym, px, nowStr]);
-    holdingsSheet.getRange(2, 1, pRows.length, hHeaders.length).setValues(pRows);
-  }
-
-  // 記錄 Log
-  const logSheet = getOrCreateSheet(SHEET_LOGS);
-  if (logSheet.getLastRow() === 0) {
-    logSheet.appendRow([\"時間\", \"操作\", \"筆數\", \"狀態\"]);
-    logSheet.getRange(1, 1, 1, 4).setBackground(\"#131922\").setFontColor(\"#e6edf3\").setFontWeight(\"bold\");
-    logSheet.setFrozenRows(1);
-  }
-  logSheet.appendRow([nowStr, \"備份寫入 (Backup)\", transactions.length + \" 筆交易\", \"成功\"]);
-
-  return {
-    status: \"success\",
-    message: \"成功備份 \" + transactions.length + \" 筆交易與現價資料至 Google 表格！\",
-    sheetUrl: ss.getUrl(),
-    sheetName: ss.getName(),
-    count: transactions.length,
-    timestamp: nowStr
-  };
-}
-
-/**
- * 從 Google 表格還原資料至 TradeLog 前端
- */
-function handleRestore() {
-  const ss = getSpreadsheet();
-  const txSheet = ss.getSheetByName(SHEET_TX);
-  
-  if (!txSheet || txSheet.getLastRow() <= 1) {
-    return {
-      status: \"success\",
-      transactions: [],
-      priceOverrides: {},
-      sheetUrl: ss.getUrl(),
-      message: \"表格內尚無備份資料\"
-    };
-  }
-
-  const values = txSheet.getDataRange().getValues();
-  const transactions = [];
-
-  for (let i = 1; i < values.length; i++) {
-    const row = values[i];
-    if (!row[0] && !row[2]) continue;
-
-    transactions.push({
-      id: String(row[0]),
-      date: typeof row[1] === 'object' ? Utilities.formatDate(row[1], \"Asia/Taipei\", \"yyyy-MM-dd\") : String(row[1]),
-      symbol: String(row[2]),
-      name: String(row[3]),
-      type: String(row[4]),
-      tradeMethod: String(row[5] || 'cash'),
-      price: parseFloat(row[6]) || 0,
-      quantity: parseFloat(row[7]) || 0,
-      fee: parseFloat(row[8]) || 0,
-      totalAmount: parseFloat(row[9]) || (parseFloat(row[6]) * parseFloat(row[7])),
-      reason: String(row[10] || \"\"),
-      behavior_tags: row[11] ? String(row[11]).split(\",\").map(s => s.trim()).filter(Boolean) : [],
-      timing: String(row[12] || \"合理\"),
-      ai_comment: String(row[13] || \"\"),
-      confidence: 100
-    });
-  }
-
-  // 讀取現價
-  const priceOverrides = {};
-  const holdingsSheet = ss.getSheetByName(SHEET_HOLDINGS);
-  if (holdingsSheet && holdingsSheet.getLastRow() > 1) {
-    const hValues = holdingsSheet.getDataRange().getValues();
-    for (let j = 1; j < hValues.length; j++) {
-      const sym = String(hValues[j][0]).trim();
-      const px = parseFloat(hValues[j][1]);
-      if (sym && !isNaN(px)) {
-        priceOverrides[sym] = px;
-      }
-    }
-  }
-
-  return {
-    status: \"success\",
-    transactions: transactions,
-    priceOverrides: priceOverrides,
-    sheetUrl: ss.getUrl(),
-    count: transactions.length,
-    message: \"成功從 Google 表格還原 \" + transactions.length + \" 筆交易！\"
-  };
-}
-
-/**
- * 查詢台股即時/盤中最新股價
- * 支援代號自動匹配上市 (.TW) 或上櫃 (.TWO)
- */
-function handleFetchPrices(symbols) {
-  if (!symbols || symbols.length === 0) {
-    return { status: \"success\", prices: {}, details: {} };
-  }
-
-  const cleanSymbols = symbols.map(s => String(s).trim().toUpperCase()).filter(Boolean);
-  const prices = {};
-  const details = {};
-
-  cleanSymbols.forEach(sym => {
-    const q = fetchSingleStockPrice(sym);
-    if (q && q.price !== null) {
-      prices[sym] = q.price;
-      details[sym] = q;
-    }
-  });
-
-  // 更新至持股現價表
-  if (Object.keys(prices).length > 0) {
-    try {
-      const holdingsSheet = getOrCreateSheet(SHEET_HOLDINGS);
-      const nowStr = Utilities.formatDate(new Date(), \"Asia/Taipei\", \"yyyy-MM-dd HH:mm:ss\");
-      
-      // 讀取現有內容
-      const existing = {};
-      if (holdingsSheet.getLastRow() > 1) {
-        const rows = holdingsSheet.getDataRange().getValues();
-        for (let i = 1; i < rows.length; i++) {
-          existing[String(rows[i][0]).trim()] = rows[i][1];
-        }
-      }
-
-      // 合併新價格
-      for (let s in prices) {
-        existing[s] = prices[s];
-      }
-
-      holdingsSheet.clear();
-      holdingsSheet.appendRow([\"股票代號\", \"最新現價\", \"更新時間\"]);
-      holdingsSheet.getRange(1, 1, 1, 3)
-                   .setBackground(\"#131922\")
-                   .setFontColor(\"#79c0ff\")
-                   .setFontWeight(\"bold\")
-                   .setHorizontalAlignment(\"center\");
-      holdingsSheet.setFrozenRows(1);
-
-      const updatedRows = Object.entries(existing).map(([s, p]) => [s, p, nowStr]);
-      if (updatedRows.length > 0) {
-        holdingsSheet.getRange(2, 1, updatedRows.length, 3).setValues(updatedRows);
-      }
-    } catch (err) {
-      console.error(\"更新現價表失敗: \" + err);
-    }
-  }
-
-  const ss = getSpreadsheet();
-  return {
-    status: \"success\",
-    prices: prices,
-    details: details,
-    sheetUrl: ss ? ss.getUrl() : null,
-    updatedAt: Utilities.formatDate(new Date(), \"Asia/Taipei\", \"yyyy-MM-dd HH:mm:ss\")
-  };
-}
-
-/**
- * 查詢單檔台股現價（依序嘗試 .TW 上市與 .TWO 上櫃）
- */
-function fetchSingleStockPrice(symbol) {
-  const cleanSym = symbol.replace(/\.TW$|\.TWO$/i, \"\");
-  const suffixes = [\".TW\", \".TWO\"];
-
-  for (let i = 0; i < suffixes.length; i++) {
-    const ticker = cleanSym + suffixes[i];
-    const url = \"https://query1.finance.yahoo.com/v8/finance/chart/\" + ticker + \"?interval=1d&range=1d\";
-    
-    try {
-      const resp = UrlFetchApp.fetch(url, {
-        muteHttpExceptions: true,
-        headers: {
-          \"User-Agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64)\"
-        }
-      });
-
-      if (resp.getResponseCode() === 200) {
-        const json = JSON.parse(resp.getContentText());
-        const result = json.chart && json.chart.result && json.chart.result[0];
-        if (result && result.meta) {
-          const meta = result.meta;
-          const curPrice = meta.regularMarketPrice;
-          const prevClose = meta.chartPreviousClose || meta.previousClose;
-          const change = curPrice && prevClose ? parseFloat((curPrice - prevClose).toFixed(2)) : 0;
-          const changePct = prevClose ? parseFloat(((change / prevClose) * 100).toFixed(2)) : 0;
-
-          if (curPrice !== undefined && curPrice !== null) {
-            return {
-              symbol: cleanSym,
-              ticker: ticker,
-              price: curPrice,
-              previousClose: prevClose,
-              change: change,
-              changePct: changePct,
-              currency: meta.currency || \"TWD\"
-            };
-          }
-        }
-      }
-    } catch (e) {
-      // 嘗試下一個 suffix
-    }
-  }
-
-  return null;
-}
-";\nconst SHEET_HOLDINGS = \"持股現價\";\nconst SHEET_LOGS = \"備份日誌\";\n\n/**\n * 處理 GET 請求\n * 支援:\n * ?action=restore (還原交易與現價)\n * ?action=fetch_prices&symbols=2330,2449,6274 (查詢即時股價)\n * ?action=ping (測試連線)\n */\nfunction doGet(e) {\n  return handleRequest(e, \"GET\");\n}\n\n/**\n * 處理 POST 請求\n * 支援:\n * action=\"backup\" (備份資料至表格)\n * action=\"fetch_prices\" (查詢即時股價)\n * action=\"restore\" (還原資料)\n */\nfunction doPost(e) {\n  return handleRequest(e, \"POST\");\n}\n\nfunction handleRequest(e, method) {\n  try {\n    let params = {};\n    if (e && e.parameter) {\n      params = e.parameter;\n    }\n    \n    // 解析 POST 內容 (支援 text/plain 與 application/json)\n    let postData = null;\n    if (e && e.postData && e.postData.contents) {\n      try {\n        postData = JSON.parse(e.postData.contents);\n      } catch (err) {\n        // 若不是純 JSON 則忽略\n      }\n    }\n\n    const action = (postData && postData.action) || params.action || \"ping\";\n\n    let responseData = {};\n\n    switch (action) {\n      case \"ping\":\n        responseData = {\n          status: \"success\",\n          message: \"TradeLog Google Apps Script API 運作正常！\",\n          timestamp: new Date().toISOString()\n        };\n        break;\n\n      case \"backup\":\n        responseData = handleBackup(postData || params);\n        break;\n\n      case \"restore\":\n        responseData = handleRestore();\n        break;\n\n      case \"fetch_prices\":\n        const symbols = (postData && postData.symbols) || (params.symbols ? params.symbols.split(\",\") : []);\n        responseData = handleFetchPrices(symbols);\n        break;\n\n      default:\n        responseData = { status: \"error\", message: \"未知的 action: \" + action };\n    }\n\n    return createJsonResponse(responseData);\n  } catch (error) {\n    return createJsonResponse({\n      status: \"error\",\n      message: error.toString(),\n      stack: error.stack\n    });\n  }\n}\n\nfunction createJsonResponse(data) {\n  const output = ContentService.createTextOutput(JSON.stringify(data));\n  output.setMimeType(ContentService.MimeType.JSON);\n  return output;\n}\n\n/**\n * 取得或自動建立指定的工作表\n */\nfunction getOrCreateSheet(sheetName) {\n  const ss = SpreadsheetApp.getActiveSpreadsheet();\n  let sheet = ss.getSheetByName(sheetName);\n  if (!sheet) {\n    sheet = ss.insertSheet(sheetName);\n  }\n  return sheet;\n}\n\n/**\n * 備份所有交易資料與現價至 Google 表格\n */\nfunction handleBackup(payload) {\n  const transactions = payload.transactions || [];\n  const priceOverrides = payload.priceOverrides || {};\n\n  const ss = SpreadsheetApp.getActiveSpreadsheet();\n  const txSheet = getOrCreateSheet(SHEET_TX);\n\n  // 初始化 / 清理並重寫標題列\n  txSheet.clear();\n  const headers = [\n    \"交易ID\", \"交易日期\", \"股票代號\", \"股票名稱\", \"類型\", \n    \"交易方式\", \"成交價格\", \"成交股數\", \"手續費\", \"總金額\", \n    \"買賣理由\", \"AI行為標籤\", \"進出場時機\", \"AI短評\", \"備份更新時間\"\n  ];\n\n  txSheet.appendRow(headers);\n  \n  // 美化標題列\n  const headerRange = txSheet.getRange(1, 1, 1, headers.length);\n  headerRange.setBackground(\"#131922\")\n             .setFontColor(\"#d4a843\")\n             .setFontWeight(\"bold\")\n             .setHorizontalAlignment(\"center\");\n  txSheet.setFrozenRows(1);\n\n  const nowStr = Utilities.formatDate(new Date(), \"Asia/Taipei\", \"yyyy-MM-dd HH:mm:ss\");\n\n  // 寫入交易列\n  if (transactions.length > 0) {\n    const rows = transactions.map(t => [\n      t.id || \"\",\n      t.date || \"\",\n      t.symbol || \"\",\n      t.name || \"\",\n      t.type || \"\",\n      t.tradeMethod || \"cash\",\n      t.price || 0,\n      t.quantity || 0,\n      t.fee || 0,\n      t.totalAmount || (t.price * t.quantity),\n      t.reason || \"\",\n      (t.behavior_tags || []).join(\", \"),\n      t.timing || \"\",\n      t.ai_comment || \"\",\n      nowStr\n    ]);\n\n    txSheet.getRange(2, 1, rows.length, headers.length).setValues(rows);\n  }\n\n  // 備份現價表 (持股現價工作表)\n  const holdingsSheet = getOrCreateSheet(SHEET_HOLDINGS);\n  holdingsSheet.clear();\n  const hHeaders = [\"股票代號\", \"最新現價\", \"備份時間\"];\n  holdingsSheet.appendRow(hHeaders);\n  holdingsSheet.getRange(1, 1, 1, hHeaders.length)\n               .setBackground(\"#131922\")\n               .setFontColor(\"#79c0ff\")\n               .setFontWeight(\"bold\")\n               .setHorizontalAlignment(\"center\");\n  holdingsSheet.setFrozenRows(1);\n\n  const priceEntries = Object.entries(priceOverrides);\n  if (priceEntries.length > 0) {\n    const pRows = priceEntries.map(([sym, px]) => [sym, px, nowStr]);\n    holdingsSheet.getRange(2, 1, pRows.length, hHeaders.length).setValues(pRows);\n  }\n\n  // 記錄 Log\n  const logSheet = getOrCreateSheet(SHEET_LOGS);\n  if (logSheet.getLastRow() === 0) {\n    logSheet.appendRow([\"時間\", \"操作\", \"筆數\", \"狀態\"]);\n    logSheet.getRange(1, 1, 1, 4).setBackground(\"#131922\").setFontColor(\"#e6edf3\").setFontWeight(\"bold\");\n    logSheet.setFrozenRows(1);\n  }\n  logSheet.appendRow([nowStr, \"備份寫入 (Backup)\", transactions.length + \" 筆交易\", \"成功\"]);\n\n  return {\n    status: \"success\",\n    message: \"成功備份 \" + transactions.length + \" 筆交易與現價資料至 Google 表格！\",\n    count: transactions.length,\n    timestamp: nowStr\n  };\n}\n\n/**\n * 從 Google 表格還原資料至 TradeLog 前端\n */\nfunction handleRestore() {\n  const ss = SpreadsheetApp.getActiveSpreadsheet();\n  const txSheet = ss.getSheetByName(SHEET_TX);\n  \n  if (!txSheet || txSheet.getLastRow() <= 1) {\n    return {\n      status: \"success\",\n      transactions: [],\n      priceOverrides: {},\n      message: \"表格內尚無備份資料\"\n    };\n  }\n\n  const values = txSheet.getDataRange().getValues();\n  const transactions = [];\n\n  for (let i = 1; i < values.length; i++) {\n    const row = values[i];\n    if (!row[0] && !row[2]) continue;\n\n    transactions.push({\n      id: String(row[0]),\n      date: typeof row[1] === 'object' ? Utilities.formatDate(row[1], \"Asia/Taipei\", \"yyyy-MM-dd\") : String(row[1]),\n      symbol: String(row[2]),\n      name: String(row[3]),\n      type: String(row[4]),\n      tradeMethod: String(row[5] || 'cash'),\n      price: parseFloat(row[6]) || 0,\n      quantity: parseFloat(row[7]) || 0,\n      fee: parseFloat(row[8]) || 0,\n      totalAmount: parseFloat(row[9]) || (parseFloat(row[6]) * parseFloat(row[7])),\n      reason: String(row[10] || \"\"),\n      behavior_tags: row[11] ? String(row[11]).split(\",\").map(s => s.trim()).filter(Boolean) : [],\n      timing: String(row[12] || \"合理\"),\n      ai_comment: String(row[13] || \"\"),\n      confidence: 100\n    });\n  }\n\n  // 讀取現價\n  const priceOverrides = {};\n  const holdingsSheet = ss.getSheetByName(SHEET_HOLDINGS);\n  if (holdingsSheet && holdingsSheet.getLastRow() > 1) {\n    const hValues = holdingsSheet.getDataRange().getValues();\n    for (let j = 1; j < hValues.length; j++) {\n      const sym = String(hValues[j][0]).trim();\n      const px = parseFloat(hValues[j][1]);\n      if (sym && !isNaN(px)) {\n        priceOverrides[sym] = px;\n      }\n    }\n  }\n\n  return {\n    status: \"success\",\n    transactions: transactions,\n    priceOverrides: priceOverrides,\n    count: transactions.length,\n    message: \"成功從 Google 表格還原 \" + transactions.length + \" 筆交易！\"\n  };\n}\n\n/**\n * 查詢台股即時/盤中最新股價\n * 支援代號自動匹配上市 (.TW) 或上櫃 (.TWO)\n */\nfunction handleFetchPrices(symbols) {\n  if (!symbols || symbols.length === 0) {\n    return { status: \"success\", prices: {}, details: {} };\n  }\n\n  const cleanSymbols = symbols.map(s => String(s).trim().toUpperCase()).filter(Boolean);\n  const prices = {};\n  const details = {};\n\n  cleanSymbols.forEach(sym => {\n    const q = fetchSingleStockPrice(sym);\n    if (q && q.price !== null) {\n      prices[sym] = q.price;\n      details[sym] = q;\n    }\n  });\n\n  // 更新至持股現價表\n  if (Object.keys(prices).length > 0) {\n    try {\n      const holdingsSheet = getOrCreateSheet(SHEET_HOLDINGS);\n      const nowStr = Utilities.formatDate(new Date(), \"Asia/Taipei\", \"yyyy-MM-dd HH:mm:ss\");\n      \n      // 讀取現有內容\n      const existing = {};\n      if (holdingsSheet.getLastRow() > 1) {\n        const rows = holdingsSheet.getDataRange().getValues();\n        for (let i = 1; i < rows.length; i++) {\n          existing[String(rows[i][0]).trim()] = rows[i][1];\n        }\n      }\n\n      // 合併新價格\n      for (let s in prices) {\n        existing[s] = prices[s];\n      }\n\n      holdingsSheet.clear();\n      holdingsSheet.appendRow([\"股票代號\", \"最新現價\", \"更新時間\"]);\n      holdingsSheet.getRange(1, 1, 1, 3)\n                   .setBackground(\"#131922\")\n                   .setFontColor(\"#79c0ff\")\n                   .setFontWeight(\"bold\")\n                   .setHorizontalAlignment(\"center\");\n      holdingsSheet.setFrozenRows(1);\n\n      const updatedRows = Object.entries(existing).map(([s, p]) => [s, p, nowStr]);\n      if (updatedRows.length > 0) {\n        holdingsSheet.getRange(2, 1, updatedRows.length, 3).setValues(updatedRows);\n      }\n    } catch (err) {\n      console.error(\"更新現價表失敗: \" + err);\n    }\n  }\n\n  return {\n    status: \"success\",\n    prices: prices,\n    details: details,\n    updatedAt: Utilities.formatDate(new Date(), \"Asia/Taipei\", \"yyyy-MM-dd HH:mm:ss\")\n  };\n}\n\n/**\n * 查詢單檔台股現價（依序嘗試 .TW 上市與 .TWO 上櫃）\n */\nfunction fetchSingleStockPrice(symbol) {\n  const cleanSym = symbol.replace(/\\.TW$|\\.TWO$/i, \"\");\n  const suffixes = [\".TW\", \".TWO\"];\n\n  for (let i = 0; i < suffixes.length; i++) {\n    const ticker = cleanSym + suffixes[i];\n    const url = \"https://query1.finance.yahoo.com/v8/finance/chart/\" + ticker + \"?interval=1d&range=1d\";\n    \n    try {\n      const resp = UrlFetchApp.fetch(url, {\n        muteHttpExceptions: true,\n        headers: {\n          \"User-Agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64)\"\n        }\n      });\n\n      if (resp.getResponseCode() === 200) {\n        const json = JSON.parse(resp.getContentText());\n        const result = json.chart && json.chart.result && json.chart.result[0];\n        if (result && result.meta) {\n          const meta = result.meta;\n          const curPrice = meta.regularMarketPrice;\n          const prevClose = meta.chartPreviousClose || meta.previousClose;\n          const change = curPrice && prevClose ? parseFloat((curPrice - prevClose).toFixed(2)) : 0;\n          const changePct = prevClose ? parseFloat(((change / prevClose) * 100).toFixed(2)) : 0;\n\n          if (curPrice !== undefined && curPrice !== null) {\n            return {\n              symbol: cleanSym,\n              ticker: ticker,\n              price: curPrice,\n              previousClose: prevClose,\n              change: change,\n              changePct: changePct,\n              currency: meta.currency || \"TWD\"\n            };\n          }\n        }\n      }\n    } catch (e) {\n      // 嘗試下一個 suffix\n    }\n  }\n\n  return null;\n}\n";
 
 function openCloudModal() {
   const urlInput = document.getElementById('gas-url-input');
@@ -12762,13 +10942,19 @@ function openCloudModal() {
 
 function updateCloudStatusBadge() {
   const badge = document.getElementById('cloud-status-badge');
-  if (!badge) return;
+  const dot = document.getElementById('cloud-badge-dot');
   if (DB.gasUrl && DB.gasUrl.startsWith('https://script.google.com/')) {
-    badge.textContent = '已設定';
-    badge.className = 'cloud-status-badge connected';
+    if (badge) {
+      badge.textContent = '已連線';
+      badge.className = 'cloud-status-badge connected';
+    }
+    if (dot) dot.style.background = '#4caf50';
   } else {
-    badge.textContent = '未設定';
-    badge.className = 'cloud-status-badge';
+    if (badge) {
+      badge.textContent = '未設定';
+      badge.className = 'cloud-status-badge';
+    }
+    if (dot) dot.style.background = '#e06c75';
   }
 }
 
@@ -12844,6 +11030,7 @@ function syncBackupToCloud() {
   .then(res => res.json())
   .then(data => {
     if (data && data.status === 'success') {
+      if (data.sheetUrl) DB.sheetUrl = data.sheetUrl;
       const nowStr = new Date().toLocaleString('zh-TW', { hour12: false });
       DB.lastSyncTime = nowStr;
       const syncTimeEl = document.getElementById('cloud-sync-time');
@@ -12878,6 +11065,7 @@ function restoreFromCloud() {
   .then(res => res.json())
   .then(data => {
     if (data && data.status === 'success') {
+      if (data.sheetUrl) DB.sheetUrl = data.sheetUrl;
       const txs = data.transactions || [];
       const prices = data.priceOverrides || {};
 
@@ -12912,7 +11100,6 @@ function fetchLiveStockPrices(silent = false) {
     return;
   }
 
-  // 取得目前所有開倉部位的代號，若無部位則抓取歷史交易出現過的代號
   const positions = buildPositions(DB.transactions);
   let symbols = positions.map(p => p.symbol);
   if (symbols.length === 0) {
@@ -12934,6 +11121,7 @@ function fetchLiveStockPrices(silent = false) {
   .then(res => res.json())
   .then(data => {
     if (data && data.status === 'success' && data.prices) {
+      if (data.sheetUrl) DB.sheetUrl = data.sheetUrl;
       let count = 0;
       for (const [sym, px] of Object.entries(data.prices)) {
         if (px !== null && !isNaN(px)) {
@@ -13004,22 +11192,34 @@ function toggleSetupGuide() {
 }
 
 function copyGasScript() {
-  navigator.clipboard.writeText(GAS_SOURCE_CODE).then(() => {
-    showToast('✓ 已複製 Google Apps Script 完整程式碼到剪貼簿！');
-  }).catch(() => {
-    showToast('複製失敗，請直接由專案中複製 google_apps_script.js');
-  });
+  fetch('google_apps_script.js')
+    .then(res => res.text())
+    .then(code => {
+      navigator.clipboard.writeText(code).then(() => {
+        showToast('✓ 已複製 Google Apps Script 完整程式碼到剪貼簿！');
+      });
+    })
+    .catch(() => {
+      window.open('https://github.com/po-0512/stock/blob/main/google_apps_script.js', '_blank');
+    });
 }
 
 function openGoogleSheetFromApp() {
-  window.open('https://docs.google.com/spreadsheets/u/0/', '_blank');
+  const target = DB.sheetUrl || 'https://docs.google.com/spreadsheets/d/13XYZGJegldlPg8aay3acuEx2hucx5Ty0DND38H1DgCI/edit';
+  window.open(target, '_blank');
 }
 
 
+/* ============================================================
+   INIT
+============================================================ */
+
 document.addEventListener('DOMContentLoaded', () => {
+  updateCloudStatusBadge();
   seedDemoData();
   initCalendar();
   renderAll();
+
   // Set default date range for history tab to last 3 months
   const today = new Date();
   const d3m   = new Date(today); d3m.setMonth(today.getMonth() - 3);
