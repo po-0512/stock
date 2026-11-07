@@ -7416,8 +7416,24 @@ function getSnapshotOnDate(targetDateStr) {
   const txUpToDate = transactions.filter(t => t.date <= targetDateStr);
   const positions = buildPositions(txUpToDate);
   const totalCost = positions.reduce((s, p) => s + p.avgCost * p.shares, 0);
+
+  // 股價估算優化：
+  // 1. 若該日期在最新交易日之後（如目前持股或近期的 1M / 3M），優先採用即時現價 / 最新報價 prices[p.symbol]
+  // 2. 若為歷史交易日，取該股票截至該日期的最後成交價（買入/賣出價），避免將數月後的現價回溯套用至建倉首日造成歷史損益失真
+  const allTradeDates = [...new Set(transactions.map(t => t.date))].sort();
+  const lastTradeDate = allTradeDates[allTradeDates.length - 1] || targetDateStr;
+
   const totalValue = positions.reduce((s, p) => {
-    const px = prices[p.symbol] ?? p.avgCost;
+    let px = null;
+    if (targetDateStr >= lastTradeDate && prices[p.symbol] != null) {
+      px = prices[p.symbol];
+    } else {
+      const txsForSym = txUpToDate.filter(t => t.symbol === p.symbol);
+      if (txsForSym.length > 0) {
+        px = txsForSym[txsForSym.length - 1].price;
+      }
+    }
+    if (px == null) px = prices[p.symbol] ?? p.avgCost;
     return s + px * p.shares;
   }, 0);
 
@@ -7476,6 +7492,7 @@ function buildDailySnapshots() {
   const todayStr = formatLocalDate(today);
   const allTradeDates = [...new Set(transactions.map(t => t.date))].sort();
   const firstTradeDate = allTradeDates[0] || todayStr;
+  const lastTradeDate  = allTradeDates[allTradeDates.length - 1] || todayStr;
 
   let targetDates = [];
 
@@ -7511,9 +7528,17 @@ function buildDailySnapshots() {
     const tradesInRange = allTradeDates.filter(d => d >= effectiveFrom && d <= effectiveTo);
     targetDates = [...new Set([...timeline, ...tradesInRange])].sort();
   } else {
-    // 'ALL' 全部歷史期間：第一筆交易到今日的所有交易日 + 取樣點 + 今日
-    const timeline = generateDatesTimeline(firstTradeDate, todayStr, 15);
-    targetDates = [...new Set([...timeline, ...allTradeDates, todayStr])].sort();
+    // 'ALL' 全部歷史期間：以真實交易歷史週期為主體！
+    // 依據交易日忠實展現部位建倉、加碼、停利停損的波動歷程，
+    // 避免在交易結束後硬塞數月無效平坦抽樣點，造成前期真實交易曲線被嚴重壓縮失真。
+    targetDates = [...allTradeDates];
+    const dLast = parseLocalDate(lastTradeDate);
+    const dNow  = parseLocalDate(todayStr);
+    const daysSinceLast = Math.round((dNow - dLast) / (1000 * 60 * 60 * 24));
+    // 若距離最後一筆交易在 7 天內（近期持續活躍中），則順延至今日；若已間隔長久，則完整聚焦於交易歷程
+    if (daysSinceLast > 0 && daysSinceLast <= 7) {
+      targetDates.push(todayStr);
+    }
   }
 
   return targetDates.map(date => getSnapshotOnDate(date));
@@ -8075,7 +8100,7 @@ function renderChart() {
       borderWidth: 2,
       backgroundColor: 'transparent',
       fill: false,
-      tension: 0.3,
+      tension: 0.15,
       pointRadius: ptRadius,
       pointHoverRadius: 5,
       pointBackgroundColor: s.color,
@@ -8131,7 +8156,7 @@ function renderChart() {
         borderWidth: 2,
         backgroundColor: gradient,
         fill: true,
-        tension: 0.3,
+        tension: 0.15,
         pointRadius: ptRadius,
         pointHoverRadius: 6,
         pointBackgroundColor: lineColor,
@@ -11145,7 +11170,10 @@ function openGoogleSheetFromApp() {
 
 document.addEventListener('DOMContentLoaded', () => {
   updateCloudStatusBadge();
-  seedDemoData();
+  const savedTxs = localStorage.getItem('tl_transactions');
+  if (!savedTxs || savedTxs === '[]' || savedTxs === 'null') {
+    seedDemoData();
+  }
   initCalendar();
   renderAll();
 
