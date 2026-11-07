@@ -6,6 +6,9 @@
 
 <meta charset="UTF-8">
 
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
 <title>TradeLog — 投資行為分析系統</title>
@@ -5645,11 +5648,9 @@ textarea.form-control {
 
           <div class="chart-custom-range">
 
-            <input class="chart-date-input" type="date" id="chart-date-from" onchange="applyCustomRange()">
-
-            <span class="chart-date-sep">—</span>
-
-            <input class="chart-date-input" type="date" id="chart-date-to" onchange="applyCustomRange()">
+            <input class="chart-date-input" type="date" id="chart-date-from" onchange="applyCustomRange()" oninput="applyCustomRange()">
+            <span class="chart-date-sep">至</span>
+            <input class="chart-date-input" type="date" id="chart-date-to" onchange="applyCustomRange()" oninput="applyCustomRange()">
 
           </div>
 
@@ -7433,16 +7434,34 @@ function getSnapshotOnDate(targetDateStr) {
   };
 }
 
+function parseLocalDate(str) {
+  if (!str) return new Date();
+  const parts = str.split('-').map(Number);
+  if (parts.length === 3) {
+    return new Date(parts[0], parts[1] - 1, parts[2]);
+  }
+  return new Date(str);
+}
+
+function formatLocalDate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
 function generateDatesTimeline(startDateStr, endDateStr, stepDays = 5) {
-  const dStart = new Date(startDateStr);
-  const dEnd = new Date(endDateStr);
+  const dStart = parseLocalDate(startDateStr);
+  const dEnd   = parseLocalDate(endDateStr);
+  if (dStart > dEnd) return [startDateStr];
+
   const dates = [];
   const curr = new Date(dStart);
-  while (curr < dEnd) {
-    dates.push(curr.toISOString().slice(0, 10));
+  while (curr <= dEnd) {
+    dates.push(formatLocalDate(curr));
     curr.setDate(curr.getDate() + stepDays);
   }
-  const endStr = dEnd.toISOString().slice(0, 10);
+  const endStr = formatLocalDate(dEnd);
   if (!dates.includes(endStr)) {
     dates.push(endStr);
   }
@@ -7454,54 +7473,51 @@ function buildDailySnapshots() {
   if (!transactions || transactions.length === 0) return [];
 
   const today = new Date();
-  const todayStr = today.toISOString().slice(0, 10);
+  const todayStr = formatLocalDate(today);
   const allTradeDates = [...new Set(transactions.map(t => t.date))].sort();
+  const firstTradeDate = allTradeDates[0] || todayStr;
 
   let targetDates = [];
 
   if (chartRange === '1M') {
-    // 過去 30 天至今日（即使最近未買賣，依然完整呈現近 1 個月持股與市值波動）
+    // 過去 30 天至今日（即使最近未買賣，依然完整呈現近 1 個月持股、已實現與市值波動）
     const d1m = new Date(today);
     d1m.setDate(d1m.getDate() - 30);
-    const startStr = d1m.toISOString().slice(0, 10);
-    const timeline = generateDatesTimeline(startStr, todayStr, 5);
+    const startStr = formatLocalDate(d1m);
+    const timeline = generateDatesTimeline(startStr, todayStr, 4);
     const tradesInRange = allTradeDates.filter(d => d >= startStr && d <= todayStr);
     targetDates = [...new Set([...timeline, ...tradesInRange])].sort();
   } else if (chartRange === '3M') {
     // 過去 90 天至今日
     const d3m = new Date(today);
     d3m.setDate(d3m.getDate() - 90);
-    const startStr = d3m.toISOString().slice(0, 10);
-    const timeline = generateDatesTimeline(startStr, todayStr, 10);
+    const startStr = formatLocalDate(d3m);
+    const timeline = generateDatesTimeline(startStr, todayStr, 8);
     const tradesInRange = allTradeDates.filter(d => d >= startStr && d <= todayStr);
     targetDates = [...new Set([...timeline, ...tradesInRange])].sort();
   } else if (chartRange === 'CUSTOM') {
-    if (chartDateFrom && chartDateTo && chartDateFrom <= chartDateTo) {
-      const daysDiff = Math.round((new Date(chartDateTo) - new Date(chartDateFrom)) / (1000 * 60 * 60 * 24));
-      const step = daysDiff <= 31 ? 4 : (daysDiff <= 90 ? 10 : 15);
-      const timeline = generateDatesTimeline(chartDateFrom, chartDateTo, step);
-      const tradesInRange = allTradeDates.filter(d => d >= chartDateFrom && d <= chartDateTo);
-      targetDates = [...new Set([...timeline, ...tradesInRange])].sort();
-    } else {
-      targetDates = [...allTradeDates];
-      if (!targetDates.includes(todayStr) && todayStr > targetDates[targetDates.length - 1]) {
-        targetDates.push(todayStr);
-      }
-    }
+    // 自訂日期範圍：即使區間內沒有新交易，也持續展示持股市值、成本、未實現與累計已實現損益
+    const fromDate = chartDateFrom || firstTradeDate;
+    const toDate   = chartDateTo || todayStr;
+    const effectiveFrom = fromDate <= toDate ? fromDate : toDate;
+    const effectiveTo   = fromDate <= toDate ? toDate : fromDate;
+
+    const dF = parseLocalDate(effectiveFrom);
+    const dT = parseLocalDate(effectiveTo);
+    const daysDiff = Math.max(1, Math.round((dT - dF) / (1000 * 60 * 60 * 24)));
+    const step = daysDiff <= 15 ? 2 : (daysDiff <= 45 ? 4 : (daysDiff <= 120 ? 8 : 15));
+
+    const timeline = generateDatesTimeline(effectiveFrom, effectiveTo, step);
+    const tradesInRange = allTradeDates.filter(d => d >= effectiveFrom && d <= effectiveTo);
+    targetDates = [...new Set([...timeline, ...tradesInRange])].sort();
   } else {
-    // 'ALL' 全部歷史期間：所有交易日 + 今天（展示整體資產成長軌跡）
-    targetDates = [...allTradeDates];
-    if (!targetDates.includes(todayStr) && todayStr > targetDates[targetDates.length - 1]) {
-      targetDates.push(todayStr);
-    }
+    // 'ALL' 全部歷史期間：第一筆交易到今日的所有交易日 + 取樣點 + 今日
+    const timeline = generateDatesTimeline(firstTradeDate, todayStr, 15);
+    targetDates = [...new Set([...timeline, ...allTradeDates, todayStr])].sort();
   }
 
   return targetDates.map(date => getSnapshotOnDate(date));
 }
-
-/* ============================================================
-   COMPUTED STATS
-============================================================ */
 
 function computeStats() {
 
@@ -8028,7 +8044,7 @@ function renderChart() {
       emptyMsg.innerHTML = `
         <div style="font-size:22px;margin-bottom:6px">📈</div>
         <div style="font-size:12px;color:var(--text-muted);font-family:var(--font-mono)">此期間尚無趨勢數據</div>
-        <button class="btn-tab-switch" style="margin-top:8px;font-size:10px" onclick="setChartRange(document.querySelector('[data-range=\'ALL\']'),'ALL')">顯示全部期間</button>
+        <button class="btn-tab-switch" style="margin-top:8px;font-size:10px" onclick="setChartRange(document.querySelector('.chart-range-btn[data-range=\'ALL\']'),'ALL')">顯示全部期間</button>
       `;
       wrapper.appendChild(emptyMsg);
     }
