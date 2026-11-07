@@ -7407,45 +7407,96 @@ function buildTransaction(raw, aiResult) {
 
 // REBUILT: buildDailySnapshots — uses positions from transactions + priceOverrides
 
+function getSnapshotOnDate(targetDateStr) {
+  const transactions = DB.transactions;
+  const prices = DB.priceOverrides || {};
+  const pairs = buildTradePairs(transactions);
+
+  const txUpToDate = transactions.filter(t => t.date <= targetDateStr);
+  const positions = buildPositions(txUpToDate);
+  const totalCost = positions.reduce((s, p) => s + p.avgCost * p.shares, 0);
+  const totalValue = positions.reduce((s, p) => {
+    const px = prices[p.symbol] ?? p.avgCost;
+    return s + px * p.shares;
+  }, 0);
+
+  const cumRealized = pairs
+    .filter(p => p.sellDate <= targetDateStr)
+    .reduce((s, p) => s + p.pnl, 0);
+
+  return {
+    date: targetDateStr,
+    total_value: parseFloat(totalValue.toFixed(0)),
+    total_cost: parseFloat(totalCost.toFixed(0)),
+    unrealized: parseFloat((totalValue - totalCost).toFixed(0)),
+    realized: parseFloat(cumRealized.toFixed(0))
+  };
+}
+
+function generateDatesTimeline(startDateStr, endDateStr, stepDays = 5) {
+  const dStart = new Date(startDateStr);
+  const dEnd = new Date(endDateStr);
+  const dates = [];
+  const curr = new Date(dStart);
+  while (curr < dEnd) {
+    dates.push(curr.toISOString().slice(0, 10));
+    curr.setDate(curr.getDate() + stepDays);
+  }
+  const endStr = dEnd.toISOString().slice(0, 10);
+  if (!dates.includes(endStr)) {
+    dates.push(endStr);
+  }
+  return dates;
+}
+
 function buildDailySnapshots() {
   const transactions = DB.transactions;
   if (!transactions || transactions.length === 0) return [];
-  const pairs  = buildTradePairs(transactions);
-  const prices = DB.priceOverrides || {};
 
-  // Unique trade dates in order
-  const dates = [...new Set(transactions.map(t => t.date))].sort();
+  const today = new Date();
+  const todayStr = today.toISOString().slice(0, 10);
+  const allTradeDates = [...new Set(transactions.map(t => t.date))].sort();
 
-  // If there are transactions and today is beyond the last trade date,
-  // include today so current active holdings and latest PnL are represented
-  const todayStr = new Date().toISOString().slice(0, 10);
-  if (dates.length > 0 && !dates.includes(todayStr) && todayStr > dates[dates.length - 1]) {
-    dates.push(todayStr);
+  let targetDates = [];
+
+  if (chartRange === '1M') {
+    // 過去 30 天至今日（即使最近未買賣，依然完整呈現近 1 個月持股與市值波動）
+    const d1m = new Date(today);
+    d1m.setDate(d1m.getDate() - 30);
+    const startStr = d1m.toISOString().slice(0, 10);
+    const timeline = generateDatesTimeline(startStr, todayStr, 5);
+    const tradesInRange = allTradeDates.filter(d => d >= startStr && d <= todayStr);
+    targetDates = [...new Set([...timeline, ...tradesInRange])].sort();
+  } else if (chartRange === '3M') {
+    // 過去 90 天至今日
+    const d3m = new Date(today);
+    d3m.setDate(d3m.getDate() - 90);
+    const startStr = d3m.toISOString().slice(0, 10);
+    const timeline = generateDatesTimeline(startStr, todayStr, 10);
+    const tradesInRange = allTradeDates.filter(d => d >= startStr && d <= todayStr);
+    targetDates = [...new Set([...timeline, ...tradesInRange])].sort();
+  } else if (chartRange === 'CUSTOM') {
+    if (chartDateFrom && chartDateTo && chartDateFrom <= chartDateTo) {
+      const daysDiff = Math.round((new Date(chartDateTo) - new Date(chartDateFrom)) / (1000 * 60 * 60 * 24));
+      const step = daysDiff <= 31 ? 4 : (daysDiff <= 90 ? 10 : 15);
+      const timeline = generateDatesTimeline(chartDateFrom, chartDateTo, step);
+      const tradesInRange = allTradeDates.filter(d => d >= chartDateFrom && d <= chartDateTo);
+      targetDates = [...new Set([...timeline, ...tradesInRange])].sort();
+    } else {
+      targetDates = [...allTradeDates];
+      if (!targetDates.includes(todayStr) && todayStr > targetDates[targetDates.length - 1]) {
+        targetDates.push(todayStr);
+      }
+    }
+  } else {
+    // 'ALL' 全部歷史期間：所有交易日 + 今天（展示整體資產成長軌跡）
+    targetDates = [...allTradeDates];
+    if (!targetDates.includes(todayStr) && todayStr > targetDates[targetDates.length - 1]) {
+      targetDates.push(todayStr);
+    }
   }
 
-  let cumRealized = 0;
-  return dates.map(date => {
-    // Realized PnL from pairs closed on or before this date
-    const dayPairs = pairs.filter(p => p.sellDate === date);
-    cumRealized += dayPairs.reduce((s, p) => s + p.pnl, 0);
-
-    // Open positions as of this date
-    const txUpToDate = transactions.filter(t => t.date <= date);
-    const positions  = buildPositions(txUpToDate);
-    const totalCost  = positions.reduce((s, p) => s + p.avgCost * p.shares, 0);
-    const totalValue = positions.reduce((s, p) => {
-      const px = prices[p.symbol] ?? p.avgCost; // fallback to cost if no price set
-      return s + px * p.shares;
-    }, 0);
-
-    return {
-      date,
-      total_value:  parseFloat(totalValue.toFixed(0)),
-      total_cost:   parseFloat(totalCost.toFixed(0)),
-      unrealized:   parseFloat((totalValue - totalCost).toFixed(0)),
-      realized:     parseFloat(cumRealized.toFixed(0))
-    };
-  });
+  return targetDates.map(date => getSnapshotOnDate(date));
 }
 
 /* ============================================================
@@ -7841,42 +7892,8 @@ let chartDateFrom = '';
 let chartDateTo   = '';
 
 function filterSnapshotsByRange(snapshots) {
-  if (!snapshots || snapshots.length === 0) return [];
-  if (chartRange === 'ALL') return snapshots;
-
-  const lastDateStr = snapshots[snapshots.length - 1].date;
-  const lastDate = new Date(lastDateStr);
-
-  if (chartRange === '1M') {
-    const cutoff = new Date(lastDate);
-    cutoff.setMonth(cutoff.getMonth() - 1);
-    const cutStr = cutoff.toISOString().slice(0, 10);
-    let filtered = snapshots.filter(s => s.date >= cutStr);
-    if (filtered.length < 2 && snapshots.length >= 2) {
-      filtered = snapshots.slice(-Math.min(snapshots.length, 10));
-    }
-    return filtered.length > 0 ? filtered : snapshots;
-  }
-
-  if (chartRange === '3M') {
-    const cutoff = new Date(lastDate);
-    cutoff.setMonth(cutoff.getMonth() - 3);
-    const cutStr = cutoff.toISOString().slice(0, 10);
-    let filtered = snapshots.filter(s => s.date >= cutStr);
-    if (filtered.length < 2 && snapshots.length >= 2) {
-      filtered = snapshots.slice(-Math.min(snapshots.length, 20));
-    }
-    return filtered.length > 0 ? filtered : snapshots;
-  }
-
-  if (chartRange === 'CUSTOM') {
-    return snapshots.filter(s =>
-      (!chartDateFrom || s.date >= chartDateFrom) &&
-      (!chartDateTo   || s.date <= chartDateTo)
-    );
-  }
-
-  return snapshots;
+  // buildDailySnapshots() 已經依照當前 chartRange 完整動態建立精確的每日時間軸
+  return snapshots || [];
 }
 
 function toggleChartRange() {
