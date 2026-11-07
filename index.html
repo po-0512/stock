@@ -947,19 +947,24 @@ html, body {
 }
 
 .chart-wrapper {
-
   background: var(--bg-card);
-
   border: 1px solid var(--border-soft);
-
   border-radius: var(--radius-md);
-
   padding: 12px;
-
-  height: 160px;
-
+  height: 200px;
   position: relative;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.chart-empty-msg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  text-align: center;
 }
 
 /* =============================
@@ -7403,70 +7408,49 @@ function buildTransaction(raw, aiResult) {
 // REBUILT: buildDailySnapshots — uses positions from transactions + priceOverrides
 
 function buildDailySnapshots() {
-
   const transactions = DB.transactions;
-
-  if (transactions.length === 0) return [];
-
+  if (!transactions || transactions.length === 0) return [];
   const pairs  = buildTradePairs(transactions);
-
-  const prices = DB.priceOverrides;
+  const prices = DB.priceOverrides || {};
 
   // Unique trade dates in order
+  const dates = [...new Set(transactions.map(t => t.date))].sort();
 
-  const dates  = [...new Set(transactions.map(t => t.date))].sort();
+  // If there are transactions and today is beyond the last trade date,
+  // include today so current active holdings and latest PnL are represented
+  const todayStr = new Date().toISOString().slice(0, 10);
+  if (dates.length > 0 && !dates.includes(todayStr) && todayStr > dates[dates.length - 1]) {
+    dates.push(todayStr);
+  }
 
   let cumRealized = 0;
-
   return dates.map(date => {
-
     // Realized PnL from pairs closed on or before this date
-
     const dayPairs = pairs.filter(p => p.sellDate === date);
-
     cumRealized += dayPairs.reduce((s, p) => s + p.pnl, 0);
 
     // Open positions as of this date
-
     const txUpToDate = transactions.filter(t => t.date <= date);
-
     const positions  = buildPositions(txUpToDate);
-
     const totalCost  = positions.reduce((s, p) => s + p.avgCost * p.shares, 0);
-
     const totalValue = positions.reduce((s, p) => {
-
       const px = prices[p.symbol] ?? p.avgCost; // fallback to cost if no price set
-
       return s + px * p.shares;
-
     }, 0);
 
     return {
-
       date,
-
       total_value:  parseFloat(totalValue.toFixed(0)),
-
       total_cost:   parseFloat(totalCost.toFixed(0)),
-
       unrealized:   parseFloat((totalValue - totalCost).toFixed(0)),
-
       realized:     parseFloat(cumRealized.toFixed(0))
-
     };
-
   });
-
 }
 
 /* ============================================================
-
    COMPUTED STATS
-
 ============================================================ */
-
-// REBUILT: computeStats — 100% transaction-driven, no DB.holdings
 
 function computeStats() {
 
@@ -7851,376 +7835,289 @@ function toggleStatsAccordion() {
 ============================================================ */
 
 let assetChart = null;
-
 let currentMetric = 'value';
-
 let chartRange = 'ALL';   // '1M' | '3M' | 'ALL' | 'CUSTOM'
-
 let chartDateFrom = '';
-
 let chartDateTo   = '';
 
 function filterSnapshotsByRange(snapshots) {
+  if (!snapshots || snapshots.length === 0) return [];
+  if (chartRange === 'ALL') return snapshots;
 
-  if (snapshots.length === 0) return snapshots;
-
-  const today = new Date();
+  const lastDateStr = snapshots[snapshots.length - 1].date;
+  const lastDate = new Date(lastDateStr);
 
   if (chartRange === '1M') {
-
-    const cutoff = new Date(today); cutoff.setMonth(today.getMonth() - 1);
-
-    const cutStr = cutoff.toISOString().slice(0,10);
-
-    return snapshots.filter(s => s.date >= cutStr);
-
+    const cutoff = new Date(lastDate);
+    cutoff.setMonth(cutoff.getMonth() - 1);
+    const cutStr = cutoff.toISOString().slice(0, 10);
+    let filtered = snapshots.filter(s => s.date >= cutStr);
+    if (filtered.length < 2 && snapshots.length >= 2) {
+      filtered = snapshots.slice(-Math.min(snapshots.length, 10));
+    }
+    return filtered.length > 0 ? filtered : snapshots;
   }
 
   if (chartRange === '3M') {
-
-    const cutoff = new Date(today); cutoff.setMonth(today.getMonth() - 3);
-
-    const cutStr = cutoff.toISOString().slice(0,10);
-
-    return snapshots.filter(s => s.date >= cutStr);
-
+    const cutoff = new Date(lastDate);
+    cutoff.setMonth(cutoff.getMonth() - 3);
+    const cutStr = cutoff.toISOString().slice(0, 10);
+    let filtered = snapshots.filter(s => s.date >= cutStr);
+    if (filtered.length < 2 && snapshots.length >= 2) {
+      filtered = snapshots.slice(-Math.min(snapshots.length, 20));
+    }
+    return filtered.length > 0 ? filtered : snapshots;
   }
 
   if (chartRange === 'CUSTOM') {
-
     return snapshots.filter(s =>
-
       (!chartDateFrom || s.date >= chartDateFrom) &&
-
       (!chartDateTo   || s.date <= chartDateTo)
-
     );
-
   }
 
-  return snapshots; // ALL
-
+  return snapshots;
 }
 
 function toggleChartRange() {
-
   const panel  = document.getElementById('chart-range-panel');
-
   const toggle = document.getElementById('chart-range-toggle');
-
+  if (!panel || !toggle) return;
   const isOpen = panel.classList.toggle('open');
-
   toggle.classList.toggle('open', isOpen);
-
 }
 
 function setChartRange(btn, range) {
-
   chartRange = range;
-
-  // Clear custom inputs if preset selected
-
   if (range !== 'CUSTOM') {
-
-    document.getElementById('chart-date-from').value = '';
-
-    document.getElementById('chart-date-to').value   = '';
-
-    chartDateFrom = ''; chartDateTo = '';
-
+    const fromInput = document.getElementById('chart-date-from');
+    const toInput   = document.getElementById('chart-date-to');
+    if (fromInput) fromInput.value = '';
+    if (toInput)   toInput.value   = '';
+    chartDateFrom = '';
+    chartDateTo = '';
   }
-
   document.querySelectorAll('.chart-range-btn').forEach(b => b.classList.remove('active'));
-
-  btn.classList.add('active');
-
+  if (btn) btn.classList.add('active');
   renderChart();
-
 }
 
 function applyCustomRange() {
-
-  chartDateFrom = document.getElementById('chart-date-from').value;
-
-  chartDateTo   = document.getElementById('chart-date-to').value;
-
+  const fromInput = document.getElementById('chart-date-from');
+  const toInput   = document.getElementById('chart-date-to');
+  chartDateFrom = fromInput ? fromInput.value : '';
+  chartDateTo   = toInput ? toInput.value : '';
   if (chartDateFrom || chartDateTo) {
-
     chartRange = 'CUSTOM';
-
     document.querySelectorAll('.chart-range-btn').forEach(b => b.classList.remove('active'));
-
   }
-
   renderChart();
+}
 
+function getChartOptions(metric, snapshots) {
+  const isPnL = (metric === 'unrealized' || metric === 'realized');
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 300 },
+    interaction: { intersect: false, mode: 'index' },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: 'rgba(13, 17, 23, 0.95)',
+        borderColor: '#1e2d3d',
+        borderWidth: 1,
+        titleColor: '#7d8590',
+        bodyColor: '#e6edf3',
+        titleFont: { family: 'JetBrains Mono', size: 11 },
+        bodyFont:  { family: 'JetBrains Mono', size: 12, weight: '600' },
+        padding: 10,
+        callbacks: {
+          title: items => {
+            if (!items || items.length === 0) return '';
+            const idx = items[0].dataIndex;
+            return snapshots[idx] ? snapshots[idx].date : items[0].label;
+          },
+          label: c => {
+            const val = Math.round(c.parsed.y);
+            const isItemPnL = isPnL || c.dataset.label === '未實現' || c.dataset.label === '已實現' || c.dataset.label === '未實現損益' || c.dataset.label === '已實現損益';
+            const sign = (isItemPnL && val > 0) ? '+' : '';
+            return ` ${c.dataset.label}: ${sign}${val.toLocaleString()}`;
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: '#162030', drawTicks: false },
+        ticks: {
+          color: '#7d8590',
+          font: { family: 'JetBrains Mono', size: 9 },
+          maxTicksLimit: 7,
+          maxRotation: 0
+        },
+        border: { color: '#1e2d3d' }
+      },
+      y: {
+        position: 'right',
+        grid: {
+          color: ctx => {
+            if (isPnL && ctx.tick && ctx.tick.value === 0) return '#484f58';
+            return '#121822';
+          },
+          lineWidth: ctx => {
+            if (isPnL && ctx.tick && ctx.tick.value === 0) return 1.5;
+            return 1;
+          },
+          drawTicks: false
+        },
+        ticks: {
+          color: '#7d8590',
+          font: { family: 'JetBrains Mono', size: 9 },
+          maxTicksLimit: 5,
+          callback: v => {
+            const abs = Math.abs(v);
+            const sign = v < 0 ? '-' : (v > 0 && isPnL ? '+' : '');
+            if (abs >= 1000000) return `${sign}${(abs / 1000000).toFixed(1)}M`;
+            if (abs >= 1000) return `${sign}${(abs / 1000).toFixed(0)}K`;
+            return `${sign}${v}`;
+          }
+        },
+        border: { color: 'transparent' }
+      }
+    }
+  };
 }
 
 function renderChart() {
-
   const allSnapshots = buildDailySnapshots();
-
   const snapshots    = filterSnapshotsByRange(allSnapshots);
+  const canvas       = document.getElementById('asset-chart');
+  const wrapper      = document.querySelector('.chart-wrapper');
+  if (!canvas) return;
 
-  const labels       = snapshots.map(s => s.date.slice(5));
+  const ctx = canvas.getContext('2d');
+  if (assetChart) {
+    assetChart.destroy();
+    assetChart = null;
+  }
 
-  const ctx = document.getElementById('asset-chart').getContext('2d');
-
-  if (assetChart) { assetChart.destroy(); assetChart = null; }
-
-  if (snapshots.length === 0) return;
-
-  const ptRadius = snapshots.length > 15 ? 0 : 3;
-
-  // ── 共用 Chart.js 選項 ─────────────────────────────────────────
-
-  const sharedOptions = {
-
-    responsive: true,
-
-    maintainAspectRatio: false,
-
-    animation: { duration: 400 },
-
-    interaction: { intersect: false, mode: 'index' },
-
-    plugins: {
-
-      tooltip: {
-
-        backgroundColor: '#0d1117',
-
-        borderColor: '#1e2d3d',
-
-        borderWidth: 1,
-
-        titleColor: '#7d8590',
-
-        bodyColor: '#e6edf3',
-
-        titleFont: { family: 'JetBrains Mono', size: 10 },
-
-        bodyFont:  { family: 'JetBrains Mono', size: 11, weight: '600' },
-
-        padding: 10,
-
-        callbacks: {
-
-          label: c => ' ' + c.dataset.label + ': ' + Math.round(c.parsed.y).toLocaleString()
-
-        }
-
-      }
-
-    },
-
-    scales: {
-
-      x: {
-
-        grid: { color: '#1e2d3d', drawTicks: false },
-
-        ticks: { color: '#484f58', font: { family: 'JetBrains Mono', size: 9 }, maxTicksLimit: 6, maxRotation: 0 },
-
-        border: { color: '#1e2d3d' }
-
-      },
-
-      y: {
-
-        position: 'right',
-
-        grid: { color: '#131922', drawTicks: false },
-
-        ticks: { color: '#484f58', font: { family: 'JetBrains Mono', size: 9 }, maxTicksLimit: 4,
-
-          callback: v => v >= 1000 ? (v / 1000).toFixed(0) + 'K' : v },
-
-        border: { color: 'transparent' }
-
-      }
-
+  // Handle empty state gracefully
+  let emptyMsg = wrapper ? wrapper.querySelector('.chart-empty-msg') : null;
+  if (!snapshots || snapshots.length === 0) {
+    if (!emptyMsg && wrapper) {
+      emptyMsg = document.createElement('div');
+      emptyMsg.className = 'chart-empty-msg';
+      emptyMsg.innerHTML = `
+        <div style="font-size:22px;margin-bottom:6px">📈</div>
+        <div style="font-size:12px;color:var(--text-muted);font-family:var(--font-mono)">此期間尚無趨勢數據</div>
+        <button class="btn-tab-switch" style="margin-top:8px;font-size:10px" onclick="setChartRange(document.querySelector('[data-range=\'ALL\']'),'ALL')">顯示全部期間</button>
+      `;
+      wrapper.appendChild(emptyMsg);
     }
+    if (emptyMsg) emptyMsg.style.display = 'flex';
+    canvas.style.display = 'none';
+    return;
+  } else {
+    if (emptyMsg) emptyMsg.style.display = 'none';
+    canvas.style.display = 'block';
+  }
 
-  };
+  const labels = snapshots.map(s => s.date.slice(5));
+  const ptRadius = snapshots.length === 1 ? 5 : (snapshots.length <= 15 ? 3 : 0);
 
-  // ── 總覽模式：四條線同一畫面 ──────────────────────────────────
-
+  // ── 總覽模式：多線同圖 ──────────────────────────────────
   if (currentMetric === 'overview') {
-
     const ALL_SERIES = [
-
       { key: 'total_value', label: '市值',   color: '#c0514a' },
-
       { key: 'total_cost',  label: '成本',   color: '#8facc4' },
-
       { key: 'unrealized',  label: '未實現', color: '#f0d7b4' },
-
       { key: 'realized',    label: '已實現', color: '#c9c0d3' },
-
     ];
-
     const series = ALL_SERIES.filter(s => overviewSelectedKeys.includes(s.key));
-
     const datasets = series.map(s => ({
-
       label: s.label,
-
       data: snapshots.map(snap => snap[s.key]),
-
       borderColor: s.color,
-
       borderWidth: 2,
-
       backgroundColor: 'transparent',
-
       fill: false,
-
-      tension: 0.35,
-
+      tension: 0.3,
       pointRadius: ptRadius,
-
       pointHoverRadius: 5,
-
       pointBackgroundColor: s.color,
-
       pointBorderColor: 'transparent',
-
     }));
 
-    // 總覽模式有 legend
-
-    const overviewOptions = JSON.parse(JSON.stringify(sharedOptions));
-
+    const overviewOptions = getChartOptions('overview', snapshots);
     overviewOptions.plugins.legend = {
-
       display: true,
-
       position: 'bottom',
-
       labels: {
-
         color: '#7d8590',
-
-        font: { family: 'JetBrains Mono', size: 9 },
-
+        font: { family: 'JetBrains Mono', size: 10 },
         boxWidth: 10,
-
-        boxHeight: 2,
-
-        padding: 10,
-
+        boxHeight: 3,
+        padding: 12,
         usePointStyle: false,
-
       }
-
     };
 
     assetChart = new Chart(ctx, {
-
       type: 'line',
-
       data: { labels, datasets },
-
       options: overviewOptions
-
     });
-
     return;
-
   }
 
   // ── 單線模式 ────────────────────────────────────────────────────
-
   const metricMap = {
-
-    value:      { data: snapshots.map(s => s.total_value), label: '市值',  color: '#c0514a' },
-
-    cost:       { data: snapshots.map(s => s.total_cost),  label: '成本',  color: '#8facc4' },
-
-    unrealized: { data: snapshots.map(s => s.unrealized),  label: '未實現', color: '#f0d7b4' },
-
-    realized:   { data: snapshots.map(s => s.realized),    label: '已實現', color: '#c9c0d3' },
-
+    value:      { data: snapshots.map(s => s.total_value), label: '市值',       color: '#c0514a' },
+    cost:       { data: snapshots.map(s => s.total_cost),  label: '成本',       color: '#8facc4' },
+    unrealized: { data: snapshots.map(s => s.unrealized),  label: '未實現損益', color: '#f0d7b4' },
+    realized:   { data: snapshots.map(s => s.realized),    label: '已實現損益', color: '#c9c0d3' },
   };
 
-  const metric    = metricMap[currentMetric];
-
+  const metric = metricMap[currentMetric] || metricMap.value;
   const lineColor = metric.color;
-
-  const gradient  = ctx.createLinearGradient(0, 0, 0, 150);
-
-  gradient.addColorStop(0, lineColor + '44');
-
+  const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+  gradient.addColorStop(0, lineColor + '40');
   gradient.addColorStop(1, lineColor + '00');
 
-  const singleOptions = JSON.parse(JSON.stringify(sharedOptions));
-
-  singleOptions.plugins.legend = { display: false };
-
-  singleOptions.plugins.tooltip.callbacks = {
-
-    label: c => ' ' + Math.round(c.parsed.y).toLocaleString()
-
-  };
+  const singleOptions = getChartOptions(currentMetric, snapshots);
 
   assetChart = new Chart(ctx, {
-
     type: 'line',
-
     data: {
-
       labels,
-
       datasets: [{
-
         label: metric.label,
-
         data: metric.data,
-
         borderColor: lineColor,
-
         borderWidth: 2,
-
         backgroundColor: gradient,
-
         fill: true,
-
-        tension: 0.35,
-
+        tension: 0.3,
         pointRadius: ptRadius,
-
-        pointHoverRadius: 5,
-
+        pointHoverRadius: 6,
         pointBackgroundColor: lineColor,
-
         pointBorderColor: 'transparent',
-
       }]
-
     },
-
     options: singleOptions
-
   });
-
 }
 
 function switchChartMetric(btn, metric) {
-
   currentMetric = metric;
-
   document.querySelectorAll('.chart-btn').forEach(b => b.classList.remove('active', 'overview-active'));
-
-  btn.classList.add('active');
-
+  if (btn) btn.classList.add('active');
   const wrapper = document.querySelector('.chart-wrapper');
-
-  if (wrapper) wrapper.style.height = '160px';
-
+  if (wrapper) wrapper.style.height = '200px';
   renderChart();
-
 }
+
 
 /* ============================================================
 
@@ -9231,23 +9128,22 @@ function submitHolding() {
 ============================================================ */
 
 function switchPage(page) {
-
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-
   document.getElementById('page-' + page).classList.add('active');
-
   document.getElementById('tab-pnl').classList.toggle('active', page === 'pnl');
-
   document.getElementById('tab-holdings').classList.toggle('active', page === 'holdings');
-
   if (page === 'holdings') {
-
     renderHoldings();
-
     if (currentHoldingsView === 'chart') renderDonutChart();
-
+  } else if (page === 'pnl') {
+    setTimeout(() => {
+      if (assetChart) {
+        assetChart.resize();
+      } else {
+        renderChart();
+      }
+    }, 60);
   }
-
 }
 
 /* ============================================================
@@ -10308,7 +10204,7 @@ function applyOverview() {
 
   const wrapper = document.querySelector('.chart-wrapper');
 
-  if (wrapper) wrapper.style.height = '195px';
+  if (wrapper) wrapper.style.height = '230px';
 
   renderChart();
 
