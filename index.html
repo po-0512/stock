@@ -6711,6 +6711,18 @@ const DB = {
 
   // priceOverrides: {symbol: currentPrice} — only manual input, never used for PnL
 
+    get dailyPrices() {
+    return JSON.parse(localStorage.getItem('tl_daily_prices') || '{}');
+  },
+  set dailyPrices(v) {
+    localStorage.setItem('tl_daily_prices', JSON.stringify(v));
+  },
+  setDailyPrice(symbol, dateStr, price) {
+    const o = this.dailyPrices;
+    if (!o[symbol]) o[symbol] = {};
+    o[symbol][dateStr] = parseFloat(price);
+    this.dailyPrices = o;
+  },
   get priceOverrides() {
 
     return JSON.parse(localStorage.getItem('tl_price_overrides') || '{}');
@@ -7411,23 +7423,36 @@ function buildTransaction(raw, aiResult) {
 function getSnapshotOnDate(targetDateStr) {
   const transactions = DB.transactions;
   const prices = DB.priceOverrides || {};
+  const dailyPrices = DB.dailyPrices || {};
   const pairs = buildTradePairs(transactions);
 
   const txUpToDate = transactions.filter(t => t.date <= targetDateStr);
   const positions = buildPositions(txUpToDate);
   const totalCost = positions.reduce((s, p) => s + p.avgCost * p.shares, 0);
 
-  // 股價估算優化：
-  // 1. 若該日期在最新交易日之後（如目前持股或近期的 1M / 3M），優先採用即時現價 / 最新報價 prices[p.symbol]
-  // 2. 若為歷史交易日，取該股票截至該日期的最後成交價（買入/賣出價），避免將數月後的現價回溯套用至建倉首日造成歷史損益失真
   const allTradeDates = [...new Set(transactions.map(t => t.date))].sort();
   const lastTradeDate = allTradeDates[allTradeDates.length - 1] || targetDateStr;
 
   const totalValue = positions.reduce((s, p) => {
     let px = null;
-    if (targetDateStr >= lastTradeDate && prices[p.symbol] != null) {
+    // 1. 優先採用 TWSE 每日歷史收盤價
+    if (dailyPrices[p.symbol]) {
+      if (dailyPrices[p.symbol][targetDateStr] != null) {
+        px = dailyPrices[p.symbol][targetDateStr];
+      } else {
+        // 若該日為假日或週末，取該日前最近一筆收盤價
+        const pastDates = Object.keys(dailyPrices[p.symbol]).filter(d => d <= targetDateStr).sort();
+        if (pastDates.length > 0) {
+          px = dailyPrices[p.symbol][pastDates[pastDates.length - 1]];
+        }
+      }
+    }
+    // 2. 若為近期或未查到每日收盤價，使用即時報價
+    if (px == null && targetDateStr >= lastTradeDate && prices[p.symbol] != null) {
       px = prices[p.symbol];
-    } else {
+    }
+    // 3. 若為歷史交易日，取該股票截至該日期的最後成交價
+    if (px == null) {
       const txsForSym = txUpToDate.filter(t => t.symbol === p.symbol);
       if (txsForSym.length > 0) {
         px = txsForSym[txsForSym.length - 1].price;
@@ -7494,48 +7519,68 @@ function buildDailySnapshots() {
   const firstTradeDate = allTradeDates[0] || todayStr;
   const lastTradeDate  = allTradeDates[allTradeDates.length - 1] || todayStr;
 
+  // 取得所有已收錄的 TWSE 日收盤價日期
+  const dp = DB.dailyPrices || {};
+  const dailyDates = [];
+  for (const sym of Object.keys(dp)) {
+    for (const dStr of Object.keys(dp[sym])) {
+      dailyDates.push(dStr);
+    }
+  }
+
   let targetDates = [];
 
   if (chartRange === '1M') {
-    // 過去 30 天至今日（即使最近未買賣，依然完整呈現近 1 個月持股、已實現與市值波動）
+    // 過去 30 天至今日：優先納入 TWSE 每日真實收盤交易日，展現真實市值與未實現損益波動
     const d1m = new Date(today);
     d1m.setDate(d1m.getDate() - 30);
     const startStr = formatLocalDate(d1m);
-    const timeline = generateDatesTimeline(startStr, todayStr, 4);
+    const dailyInRange = dailyDates.filter(d => d >= startStr && d <= todayStr);
     const tradesInRange = allTradeDates.filter(d => d >= startStr && d <= todayStr);
-    targetDates = [...new Set([...timeline, ...tradesInRange])].sort();
+    if (dailyInRange.length >= 3) {
+      targetDates = [...new Set([...dailyInRange, ...tradesInRange, todayStr])].sort();
+    } else {
+      const timeline = generateDatesTimeline(startStr, todayStr, 4);
+      targetDates = [...new Set([...timeline, ...tradesInRange])].sort();
+    }
   } else if (chartRange === '3M') {
-    // 過去 90 天至今日
+    // 過去 90 天至今日：納入 TWSE 每日真實收盤價
     const d3m = new Date(today);
     d3m.setDate(d3m.getDate() - 90);
     const startStr = formatLocalDate(d3m);
-    const timeline = generateDatesTimeline(startStr, todayStr, 8);
+    const dailyInRange = dailyDates.filter(d => d >= startStr && d <= todayStr);
     const tradesInRange = allTradeDates.filter(d => d >= startStr && d <= todayStr);
-    targetDates = [...new Set([...timeline, ...tradesInRange])].sort();
+    if (dailyInRange.length >= 5) {
+      targetDates = [...new Set([...dailyInRange, ...tradesInRange, todayStr])].sort();
+    } else {
+      const timeline = generateDatesTimeline(startStr, todayStr, 8);
+      targetDates = [...new Set([...timeline, ...tradesInRange])].sort();
+    }
   } else if (chartRange === 'CUSTOM') {
-    // 自訂日期範圍：即使區間內沒有新交易，也持續展示持股市值、成本、未實現與累計已實現損益
+    // 自訂日期範圍
     const fromDate = chartDateFrom || firstTradeDate;
     const toDate   = chartDateTo || todayStr;
     const effectiveFrom = fromDate <= toDate ? fromDate : toDate;
     const effectiveTo   = fromDate <= toDate ? toDate : fromDate;
 
-    const dF = parseLocalDate(effectiveFrom);
-    const dT = parseLocalDate(effectiveTo);
-    const daysDiff = Math.max(1, Math.round((dT - dF) / (1000 * 60 * 60 * 24)));
-    const step = daysDiff <= 15 ? 2 : (daysDiff <= 45 ? 4 : (daysDiff <= 120 ? 8 : 15));
-
-    const timeline = generateDatesTimeline(effectiveFrom, effectiveTo, step);
+    const dailyInRange = dailyDates.filter(d => d >= effectiveFrom && d <= effectiveTo);
     const tradesInRange = allTradeDates.filter(d => d >= effectiveFrom && d <= effectiveTo);
-    targetDates = [...new Set([...timeline, ...tradesInRange])].sort();
+    if (dailyInRange.length >= 3) {
+      targetDates = [...new Set([...dailyInRange, ...tradesInRange, effectiveTo])].sort();
+    } else {
+      const dF = parseLocalDate(effectiveFrom);
+      const dT = parseLocalDate(effectiveTo);
+      const daysDiff = Math.max(1, Math.round((dT - dF) / (1000 * 60 * 60 * 24)));
+      const step = daysDiff <= 15 ? 2 : (daysDiff <= 45 ? 4 : (daysDiff <= 120 ? 8 : 15));
+      const timeline = generateDatesTimeline(effectiveFrom, effectiveTo, step);
+      targetDates = [...new Set([...timeline, ...tradesInRange])].sort();
+    }
   } else {
     // 'ALL' 全部歷史期間：以真實交易歷史週期為主體！
-    // 依據交易日忠實展現部位建倉、加碼、停利停損的波動歷程，
-    // 避免在交易結束後硬塞數月無效平坦抽樣點，造成前期真實交易曲線被嚴重壓縮失真。
     targetDates = [...allTradeDates];
     const dLast = parseLocalDate(lastTradeDate);
     const dNow  = parseLocalDate(todayStr);
     const daysSinceLast = Math.round((dNow - dLast) / (1000 * 60 * 60 * 24));
-    // 若距離最後一筆交易在 7 天內（近期持續活躍中），則順延至今日；若已間隔長久，則完整聚焦於交易歷程
     if (daysSinceLast > 0 && daysSinceLast <= 7) {
       targetDates.push(todayStr);
     }
@@ -7974,6 +8019,52 @@ function applyCustomRange() {
 
 function getChartOptions(metric, snapshots) {
   const isPnL = (metric === 'unrealized' || metric === 'realized');
+
+  let vals = [];
+  if (snapshots && snapshots.length > 0) {
+    if (metric === 'value') vals = snapshots.map(s => s.total_value);
+    else if (metric === 'cost') vals = snapshots.map(s => s.total_cost);
+    else if (metric === 'unrealized') vals = snapshots.map(s => s.unrealized);
+    else if (metric === 'realized') vals = snapshots.map(s => s.realized);
+    else if (metric === 'overview') {
+      vals = [
+        ...snapshots.map(s => s.total_value),
+        ...snapshots.map(s => s.total_cost),
+        ...snapshots.map(s => s.unrealized),
+        ...snapshots.map(s => s.realized)
+      ];
+    }
+  }
+
+  const minVal = vals.length > 0 ? Math.min(...vals) : 0;
+  const maxVal = vals.length > 0 ? Math.max(...vals) : 0;
+  const range = maxVal - minVal;
+  const isFlat = (range === 0);
+
+  let ySuggestedMin = undefined;
+  let ySuggestedMax = undefined;
+
+  if (isFlat) {
+    // 當該指標在期間內為平線時，提供寬廣刻度與零軸基準，防止 Y 軸重複標籤與視覺失真
+    if (isPnL) {
+      if (minVal >= 0) {
+        ySuggestedMin = 0;
+        ySuggestedMax = Math.max(minVal * 1.35, 1000);
+      } else {
+        ySuggestedMin = minVal * 1.35;
+        ySuggestedMax = 0;
+      }
+    } else {
+      ySuggestedMin = 0;
+      ySuggestedMax = Math.max(maxVal * 1.3, 1000);
+    }
+  } else {
+    if (isPnL) {
+      if (minVal > 0) ySuggestedMin = 0;
+      else if (maxVal < 0) ySuggestedMax = 0;
+    }
+  }
+
   return {
     responsive: true,
     maintainAspectRatio: false,
@@ -8018,6 +8109,8 @@ function getChartOptions(metric, snapshots) {
       },
       y: {
         position: 'right',
+        suggestedMin: ySuggestedMin,
+        suggestedMax: ySuggestedMax,
         grid: {
           color: ctx => {
             if (isPnL && ctx.tick && ctx.tick.value === 0) return '#484f58';
@@ -8034,10 +8127,16 @@ function getChartOptions(metric, snapshots) {
           font: { family: 'JetBrains Mono', size: 9 },
           maxTicksLimit: 5,
           callback: v => {
+            if (v === 0) return '0';
             const abs = Math.abs(v);
             const sign = v < 0 ? '-' : (v > 0 && isPnL ? '+' : '');
-            if (abs >= 1000000) return `${sign}${(abs / 1000000).toFixed(1)}M`;
-            if (abs >= 1000) return `${sign}${(abs / 1000).toFixed(0)}K`;
+            if (abs >= 1000000) {
+              const m = abs / 1000000;
+              return `${sign}${m.toFixed(1)}M`;
+            }
+            if (abs >= 1000) {
+              return `${sign}${(abs / 1000).toFixed(0)}K`;
+            }
             return `${sign}${v}`;
           }
         },
@@ -8045,6 +8144,48 @@ function getChartOptions(metric, snapshots) {
       }
     }
   };
+}
+
+
+async function syncTwseDailyPrices() {
+  const positions = buildPositions(DB.transactions);
+  const symbols = [...new Set(positions.map(p => p.symbol))];
+  if (symbols.length === 0) return;
+
+  const now = new Date();
+  const ymList = [];
+  const ymNow = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}`;
+  ymList.push(ymNow);
+  const prev = new Date(now); prev.setMonth(prev.getMonth() - 1);
+  const ymPrev = `${prev.getFullYear()}${String(prev.getMonth() + 1).padStart(2, '0')}`;
+  ymList.push(ymPrev);
+
+  let updated = false;
+  for (const sym of symbols) {
+    for (const ym of ymList) {
+      try {
+        const url = `https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=${ym}01&stockNo=${sym}&response=json`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data && data.stat === 'OK' && Array.isArray(data.data)) {
+          for (const row of data.data) {
+            const p = row[0].split('/');
+            const ad = `${parseInt(p[0]) + 1911}-${p[1]}-${p[2]}`;
+            const closePx = parseFloat(row[6].replace(/,/g, ''));
+            if (!isNaN(closePx)) {
+              DB.setDailyPrice(sym, ad, closePx);
+              updated = true;
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('TWSE auto fetch error for', sym, ym, e);
+      }
+    }
+  }
+  if (updated) {
+    renderChart();
+  }
 }
 
 function renderChart() {
@@ -9497,12 +9638,10 @@ function seedDemoData() {
   // 現價 2026/05/12（已出清: 2303 2327 2345 2449 3189 6274 3324 3037）
 
   DB.priceOverrides = {
-
-    '2441':   96.5,
-
-    '009816': 14.06,
-
+    '2441': 97.5,
+    '009816': 13.88
   };
+  DB.dailyPrices = {"2441": {"2026-09-01": 119.5, "2026-09-02": 116.0, "2026-09-03": 113.5, "2026-09-04": 116.0, "2026-09-07": 118.0, "2026-09-08": 114.5, "2026-09-09": 114.5, "2026-09-10": 115.0, "2026-09-11": 111.5, "2026-09-14": 114.0, "2026-09-15": 115.0, "2026-09-16": 116.5, "2026-09-17": 118.5, "2026-09-18": 123.5, "2026-09-21": 127.5, "2026-09-22": 127.0, "2026-09-23": 125.0, "2026-09-24": 124.0, "2026-09-29": 122.0, "2026-09-30": 125.5, "2026-10-01": 124.5, "2026-10-02": 126.5, "2026-10-05": 124.0, "2026-10-06": 126.5, "2026-10-07": 127.0, "2026-10-08": 127.0, "2026-10-12": 130.0, "2026-10-13": 128.0, "2026-10-14": 128.0, "2026-10-15": 118.5, "2026-10-16": 121.0, "2026-10-19": 115.5, "2026-10-20": 112.5, "2026-10-21": 117.5, "2026-10-22": 111.0, "2026-10-27": 112.0, "2026-10-28": 115.5, "2026-10-29": 112.5, "2026-10-30": 106.5, "2026-11-02": 113.0, "2026-11-03": 108.0, "2026-11-04": 111.0, "2026-11-05": 103.0, "2026-11-06": 97.5}, "009816": {"2026-09-01": 15.89, "2026-09-02": 15.65, "2026-09-03": 15.62, "2026-09-04": 15.9, "2026-09-07": 16.17, "2026-09-08": 16.12, "2026-09-09": 16.11, "2026-09-10": 16.03, "2026-09-11": 15.88, "2026-09-14": 15.82, "2026-09-15": 15.75, "2026-09-16": 15.89, "2026-09-17": 16.04, "2026-09-18": 16.25, "2026-09-21": 16.47, "2026-09-22": 16.52, "2026-09-23": 16.6, "2026-09-24": 16.57, "2026-09-29": 16.4, "2026-09-30": 16.49, "2026-10-01": 16.6, "2026-10-02": 16.58, "2026-10-05": 16.99, "2026-10-06": 17.06, "2026-10-07": 17.04, "2026-10-08": 16.87, "2026-10-12": 16.89, "2026-10-13": 16.61, "2026-10-14": 16.65, "2026-10-15": 16.19, "2026-10-16": 16.2, "2026-10-19": 16.07, "2026-10-20": 15.93, "2026-10-21": 16.08, "2026-10-22": 15.93, "2026-10-27": 15.9, "2026-10-28": 16.17, "2026-10-29": 16.01, "2026-10-30": 15.67, "2026-11-02": 15.56, "2026-11-03": 15.04, "2026-11-04": 14.91, "2026-11-05": 14.53, "2026-11-06": 13.88}};
 
 }
 
@@ -11175,6 +11314,7 @@ document.addEventListener('DOMContentLoaded', () => {
     seedDemoData();
   }
   initCalendar();
+  syncTwseDailyPrices();
   renderAll();
 
   // Set default date range for history tab to last 3 months
